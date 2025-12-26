@@ -2,7 +2,7 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>NoFap Streak – Friends Dashboard</title>
+  <title>NoFap Streak – Friends Dashboard (Shared)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
@@ -170,12 +170,6 @@
       border-color: #b91c1c;
     }
 
-    .btn-small {
-      font-size: 0.75rem;
-      padding: 0.25rem 0.6rem;
-      box-shadow: none;
-    }
-
     .btn-reset-all {
       align-self: center;
       padding-inline: 1.1rem;
@@ -267,12 +261,12 @@
     <header style="text-align:center;">
       <h1>🚫 NoFap Streak Dashboard</h1>
       <p class="subtitle" id="subtitle">
-        Lade lokalen Fortschritt…
+        Verbinde mit Online-Speicher…
       </p>
     </header>
 
     <button id="resetAll" class="btn-reset-all">
-      🔄 Alles zurücksetzen
+      🔄 Alles zurücksetzen (für euch beide)
     </button>
 
     <!-- Player cards -->
@@ -284,13 +278,36 @@
 
   <footer id="footer"></footer>
 
+  <!-- Firebase CDN (Compat API für einfache Einbindung) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+
   <script>
-    const STORAGE_KEY = "nofap-checker-v1";
+    // === HIER DEIN FIREBASE CONFIG EINFÜGEN ===
+    // Hole das Objekt aus der Firebase-Konsole (Web-App Setup)
+    const firebaseConfig = {
+    apiKey: "AIzaSyAVyb0c_fr9mIWW0HoCg_ZVxJAS3h9ZnXM",
+    authDomain: "nofap-checker.firebaseapp.com",
+    databaseURL: "https://nofap-checker-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "nofap-checker",
+    storageBucket: "nofap-checker.firebasestorage.app",
+    messagingSenderId: "635416357056",
+    appId: "1:635416357056:web:e21753e0f76beb7668e525",
+    measurementId: "G-HNWQVTZZNN"
+};
+    // ==========================================
+
+    // Eine "Room-ID", falls du später mehrere Gruppen haben willst
+    const ROOM_ID = "friends-room-1";
 
     const DEFAULT_PLAYERS = [
       { id: "p1", name: "Maik" },
       { id: "p2", name: "Marvin" }
     ];
+
+    let db = null;
+    let state = null;
+    let hasInitialLoad = false;
 
     function todayDateStr() {
       return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
@@ -328,37 +345,36 @@
       return { players };
     }
 
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY);
-        if (!raw) return defaultState();
-        const parsed = JSON.parse(raw);
-        if (!parsed.players) return defaultState();
-
-        // Sanity / defaults
-        for (const id of Object.keys(parsed.players)) {
-          const p = parsed.players[id];
-          if (typeof p.name !== "string") p.name = id;
-          if (typeof p.isOnStreak !== "boolean") p.isOnStreak = true;
-          if (!p.streakStart) p.streakStart = todayDateStr();
-          if (typeof p.bestStreak !== "number") p.bestStreak = 0;
-          if (p.lastRelapseDate === undefined) p.lastRelapseDate = null;
-          if (p.lastRelapseReason === undefined) p.lastRelapseReason = "";
-          if (p.lastCheckDate === undefined) p.lastCheckDate = null;
+    function ensureStateShape() {
+      if (!state || !state.players) {
+        state = defaultState();
+        return;
+      }
+      for (const id of Object.keys(state.players)) {
+        const p = state.players[id];
+        if (typeof p.name !== "string") p.name = id;
+        if (typeof p.isOnStreak !== "boolean") p.isOnStreak = true;
+        if (!p.streakStart) p.streakStart = todayDateStr();
+        if (typeof p.bestStreak !== "number") p.bestStreak = 0;
+        if (p.lastRelapseDate === undefined) p.lastRelapseDate = null;
+        if (p.lastRelapseReason === undefined) p.lastRelapseReason = "";
+        if (p.lastCheckDate === undefined) p.lastCheckDate = null;
+      }
+      // falls noch keine Default-Spieler existieren, ergänzen
+      DEFAULT_PLAYERS.forEach((dp) => {
+        if (!state.players[dp.id]) {
+          state.players[dp.id] = {
+            id: dp.id,
+            name: dp.name,
+            isOnStreak: true,
+            streakStart: todayDateStr(),
+            bestStreak: 0,
+            lastRelapseDate: null,
+            lastRelapseReason: "",
+            lastCheckDate: null
+          };
         }
-        return parsed;
-      } catch (e) {
-        console.error("Fehler beim Laden – verwende Defaults", e);
-        return defaultState();
-      }
-    }
-
-    function saveState() {
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-      } catch (e) {
-        console.error("Fehler beim Speichern in localStorage", e);
-      }
+      });
     }
 
     function currentStreakDays(player) {
@@ -385,13 +401,20 @@
       return player.lastCheckDate === todayDateStr();
     }
 
+    function saveStateToFirebase() {
+      if (!db || !hasInitialLoad) return;
+      const ref = db.ref("nofapRooms/" + ROOM_ID);
+      ref.set(state).catch((err) => {
+        console.error("Fehler beim Speichern in Firebase:", err);
+      });
+    }
+
     function handleCheckClean(playerId) {
       const player = state.players[playerId];
       if (!player) return;
       const today = todayDateStr();
 
       if (!player.isOnStreak) {
-        // Neuer Start
         player.isOnStreak = true;
         player.streakStart = today;
       } else if (!player.streakStart) {
@@ -399,7 +422,7 @@
       }
 
       player.lastCheckDate = today;
-      saveState();
+      saveStateToFirebase();
       renderAll();
     }
 
@@ -412,11 +435,10 @@
         player.lastRelapseReason || ""
       );
       if (reason === null) {
-        // Abgebrochen
-        return;
+        return; // abgebrochen
       }
 
-      // Bisherige Streak-Länge
+      // aktuelle Streak-Länge (bis gestern)
       let streakLen = 0;
       if (player.isOnStreak && player.streakStart) {
         const start = parseDate(player.streakStart);
@@ -435,10 +457,8 @@
       player.lastRelapseDate = today;
       player.lastRelapseReason = reason.trim();
       player.lastCheckDate = today;
-      // streakStart bleibt für historische Berechnung – neuer Start erfolgt,
-      // wenn wieder "Heute clean" gedrückt wird.
 
-      saveState();
+      saveStateToFirebase();
       renderAll();
     }
 
@@ -446,22 +466,24 @@
       const player = state.players[playerId];
       if (!player) return;
       player.name = newName.trim() || player.name || playerId;
-      saveState();
+      saveStateToFirebase();
       renderAll();
     }
 
     function handleResetAll() {
-      if (!window.confirm("Wirklich alle Daten für euch beide löschen und neu starten?")) {
+      if (!window.confirm("Wirklich alle Daten für euch beide im gemeinsamen Speicher löschen und neu starten?")) {
         return;
       }
       state = defaultState();
-      saveState();
+      saveStateToFirebase();
       renderAll();
     }
 
     function renderCards() {
       const cardsContainer = document.getElementById("cards");
       cardsContainer.innerHTML = "";
+
+      if (!state || !state.players) return;
 
       const players = Object.values(state.players);
 
@@ -567,7 +589,7 @@
         const info = document.createElement("div");
         info.className = "small-muted";
         info.textContent =
-          "Hinweis: Nur du siehst diese Daten – sie werden lokal im Browser gespeichert.";
+          "Gemeinsamer Online-Stand: Alles wird in einer Firebase Realtime Database gespeichert.";
         card.appendChild(info);
 
         cardsContainer.appendChild(card);
@@ -577,6 +599,8 @@
     function renderSummary() {
       const summary = document.getElementById("summary");
       summary.innerHTML = "";
+
+      if (!state || !state.players) return;
 
       const players = Object.values(state.players);
 
@@ -659,30 +683,65 @@
       }
     }
 
-    function renderMeta() {
+    function renderMeta(connected) {
       const subtitle = document.getElementById("subtitle");
       const footer = document.getElementById("footer");
       const now = new Date();
-      subtitle.textContent =
-        `Jeden Tag gemeinsam checken, ob ihr noch auf Streak seid. Stand: ${now.toLocaleString()}`;
+
+      if (!connected) {
+        subtitle.textContent = "Verbinde mit Online-Speicher…";
+      } else {
+        subtitle.textContent =
+          `Ihr seht denselben Stand – gespeichert in Firebase. Stand: ${now.toLocaleString()}`;
+      }
 
       footer.innerHTML =
-        'Daten werden nur im lokalen Speicher deines Browsers gehalten (localStorage). ' +
-        "Wenn du den Speicher löschst oder einen anderen Browser nutzt, fängst du hier neu an.";
+        "Diese Seite läuft statisch (z.B. GitHub Pages) und nutzt Firebase Realtime Database als gemeinsamen Speicher für euch beide.";
     }
 
     function renderAll() {
       renderCards();
       renderSummary();
-      renderMeta();
+      renderMeta(hasInitialLoad);
     }
 
-    let state = loadState();
+    function initFirebaseAndSubscribe() {
+      try {
+        firebase.initializeApp(firebaseConfig);
+        db = firebase.database();
+      } catch (e) {
+        console.error("Fehler beim Initialisieren von Firebase:", e);
+        renderMeta(false);
+        return;
+      }
+
+      const ref = db.ref("nofapRooms/" + ROOM_ID);
+
+      ref.on("value", (snapshot) => {
+        if (!snapshot.exists()) {
+          state = defaultState();
+          ensureStateShape();
+          hasInitialLoad = true;
+          saveStateToFirebase();
+          renderAll();
+          return;
+        }
+        state = snapshot.val();
+        ensureStateShape();
+        hasInitialLoad = true;
+        renderAll();
+      }, (err) => {
+        console.error("Fehler beim Lesen von Firebase:", err);
+        hasInitialLoad = false;
+        renderMeta(false);
+      });
+    }
 
     function init() {
       const resetBtn = document.getElementById("resetAll");
       resetBtn.addEventListener("click", handleResetAll);
-      renderAll();
+      renderMeta(false);
+      initFirebaseAndSubscribe();
     }
 
     init();
