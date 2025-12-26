@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>NoFap Streak – Friends Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #050816;
+      color: #e5e7eb;
+    }
+
+    body {
+      margin: 0;
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      text-align: center;
+    }
+
+    .subtitle {
+      color: #9ca3af;
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
+    main {
+      width: 100%;
+      max-width: 1100px;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+      width: 100%;
+    }
+
+    .card {
+      background: radial-gradient(circle at top, #111827, #020617);
+      border-radius: 1rem;
+      padding: 1.2rem 1.4rem;
+      border: 1px solid #1f2937;
+      box-shadow: 0 18px 45px rgba(0,0,0,0.6);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.4rem;
+    }
+
+    .username {
+      font-weight: 600;
+      font-size: 1.1rem;
+    }
+
+    .username-input {
+      margin-top: 0.35rem;
+      width: 100%;
+      padding: 0.25rem 0.5rem;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #020617;
+      color: #e5e7eb;
+      font-size: 0.8rem;
+      outline: none;
+    }
+
+    .username-input:focus {
+      border-color: #60a5fa;
+    }
+
+    .badge {
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .badge.active {
+      background: #065f46;
+      color: #bbf7d0;
+    }
+
+    .badge.inactive {
+      background: #7f1d1d;
+      color: #fecaca;
+    }
+
+    .section-title {
+      margin-top: 0.8rem;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #d1d5db;
+    }
+
+    .stats-row {
+      margin-top: 0.4rem;
+      font-size: 0.82rem;
+      color: #d1d5db;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .highlight {
+      color: #facc15;
+      font-weight: 600;
+    }
+
+    .small-muted {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    /* Buttons */
+    .btn-row {
+      margin-top: 0.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    button {
+      font-family: inherit;
+      border-radius: 999px;
+      border: 1px solid #1f2937;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: #020617;
+      color: #e5e7eb;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.1s ease, border-color 0.1s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+      border-color: #374151;
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+    }
+
+    .btn-clean {
+      border-color: #166534;
+    }
+
+    .btn-relapse {
+      border-color: #b91c1c;
+    }
+
+    .btn-small {
+      font-size: 0.75rem;
+      padding: 0.25rem 0.6rem;
+      box-shadow: none;
+    }
+
+    .btn-reset-all {
+      align-self: center;
+      padding-inline: 1.1rem;
+      border-color: #f97316;
+      background: radial-gradient(circle at top, #111827, #020617);
+    }
+
+    /* Relapse notes */
+    .relapse-note {
+      margin-top: 0.5rem;
+      font-size: 0.78rem;
+      color: #fecaca;
+      background: rgba(127,29,29,0.3);
+      border-radius: 0.5rem;
+      padding: 0.4rem 0.5rem;
+      border: 1px solid #7f1d1d;
+    }
+
+    .relapse-note-title {
+      font-weight: 600;
+      margin-bottom: 0.1rem;
+    }
+
+    /* Summary / leaderboards */
+    #summary {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .summary-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .summary-card {
+      background: #020617;
+      border-radius: 0.75rem;
+      border: 1px solid #1f2937;
+      padding: 1rem 1.2rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    th, td {
+      padding: 0.3rem 0.4rem;
+      text-align: left;
+    }
+
+    th {
+      color: #d1d5db;
+      border-bottom: 1px solid #1f2937;
+    }
+
+    tr:nth-child(even) td {
+      background: rgba(15,23,42,0.4);
+    }
+
+    .duel-line {
+      font-size: 0.8rem;
+      margin-bottom: 0.2rem;
+      color: #e5e7eb;
+    }
+
+    footer {
+      font-size: 0.8rem;
+      color: #6b7280;
+      text-align: center;
+    }
+
+    a {
+      color: #60a5fa;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 1.5rem 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header style="text-align:center;">
+      <h1>🚫 NoFap Streak Dashboard</h1>
+      <p class="subtitle" id="subtitle">
+        Lade lokalen Fortschritt…
+      </p>
+    </header>
+
+    <button id="resetAll" class="btn-reset-all">
+      🔄 Alles zurücksetzen
+    </button>
+
+    <!-- Player cards -->
+    <section class="grid" id="cards"></section>
+
+    <!-- Global overview -->
+    <section id="summary"></section>
+  </main>
+
+  <footer id="footer"></footer>
+
+  <script>
+    const STORAGE_KEY = "nofap-checker-v1";
+
+    const DEFAULT_PLAYERS = [
+      { id: "p1", name: "Maik" },
+      { id: "p2", name: "Marvin" }
+    ];
+
+    function todayDateStr() {
+      return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+    }
+
+    function parseDate(str) {
+      if (!str) return null;
+      const d = new Date(str);
+      return isNaN(d.getTime()) ? null : d;
+    }
+
+    function daysBetween(a, b) {
+      if (!a || !b) return 0;
+      const msPerDay = 24 * 60 * 60 * 1000;
+      const start = new Date(a.getFullYear(), a.getMonth(), a.getDate()).getTime();
+      const end = new Date(b.getFullYear(), b.getMonth(), b.getDate()).getTime();
+      return Math.max(0, Math.round((end - start) / msPerDay));
+    }
+
+    function defaultState() {
+      const today = todayDateStr();
+      const players = {};
+      DEFAULT_PLAYERS.forEach((p) => {
+        players[p.id] = {
+          id: p.id,
+          name: p.name,
+          isOnStreak: true,
+          streakStart: today,
+          bestStreak: 0,
+          lastRelapseDate: null,
+          lastRelapseReason: "",
+          lastCheckDate: null
+        };
+      });
+      return { players };
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return defaultState();
+        const parsed = JSON.parse(raw);
+        if (!parsed.players) return defaultState();
+
+        // Sanity / defaults
+        for (const id of Object.keys(parsed.players)) {
+          const p = parsed.players[id];
+          if (typeof p.name !== "string") p.name = id;
+          if (typeof p.isOnStreak !== "boolean") p.isOnStreak = true;
+          if (!p.streakStart) p.streakStart = todayDateStr();
+          if (typeof p.bestStreak !== "number") p.bestStreak = 0;
+          if (p.lastRelapseDate === undefined) p.lastRelapseDate = null;
+          if (p.lastRelapseReason === undefined) p.lastRelapseReason = "";
+          if (p.lastCheckDate === undefined) p.lastCheckDate = null;
+        }
+        return parsed;
+      } catch (e) {
+        console.error("Fehler beim Laden – verwende Defaults", e);
+        return defaultState();
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        console.error("Fehler beim Speichern in localStorage", e);
+      }
+    }
+
+    function currentStreakDays(player) {
+      if (!player.isOnStreak || !player.streakStart) return 0;
+      const start = parseDate(player.streakStart);
+      const today = new Date();
+      return daysBetween(start, today) + 1; // inkl. heute
+    }
+
+    function lastRelapseLabel(player) {
+      if (!player.lastRelapseDate) return "Kein Rückfall gespeichert.";
+      const d = parseDate(player.lastRelapseDate);
+      if (!d) return "Datum des letzten Rückfalls unbekannt.";
+      const today = new Date();
+      const daysAgo = daysBetween(d, today);
+      const dateStr = d.toLocaleDateString();
+      if (daysAgo === 0) return `Heute (${dateStr})`;
+      if (daysAgo === 1) return `Gestern (${dateStr})`;
+      return `${daysAgo} Tag(e) her (${dateStr})`;
+    }
+
+    function todayChecked(player) {
+      if (!player.lastCheckDate) return false;
+      return player.lastCheckDate === todayDateStr();
+    }
+
+    function handleCheckClean(playerId) {
+      const player = state.players[playerId];
+      if (!player) return;
+      const today = todayDateStr();
+
+      if (!player.isOnStreak) {
+        // Neuer Start
+        player.isOnStreak = true;
+        player.streakStart = today;
+      } else if (!player.streakStart) {
+        player.streakStart = today;
+      }
+
+      player.lastCheckDate = today;
+      saveState();
+      renderAll();
+    }
+
+    function handleRelapse(playerId) {
+      const player = state.players[playerId];
+      if (!player) return;
+      const today = todayDateStr();
+      const reason = window.prompt(
+        `Was war der Grund für den Rückfall bei ${player.name}? (optional)`,
+        player.lastRelapseReason || ""
+      );
+      if (reason === null) {
+        // Abgebrochen
+        return;
+      }
+
+      // Bisherige Streak-Länge
+      let streakLen = 0;
+      if (player.isOnStreak && player.streakStart) {
+        const start = parseDate(player.streakStart);
+        if (start) {
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          streakLen = daysBetween(start, yesterday) + 1;
+        }
+      }
+
+      if (streakLen > player.bestStreak) {
+        player.bestStreak = streakLen;
+      }
+
+      player.isOnStreak = false;
+      player.lastRelapseDate = today;
+      player.lastRelapseReason = reason.trim();
+      player.lastCheckDate = today;
+      // streakStart bleibt für historische Berechnung – neuer Start erfolgt,
+      // wenn wieder "Heute clean" gedrückt wird.
+
+      saveState();
+      renderAll();
+    }
+
+    function handleNameChange(playerId, newName) {
+      const player = state.players[playerId];
+      if (!player) return;
+      player.name = newName.trim() || player.name || playerId;
+      saveState();
+      renderAll();
+    }
+
+    function handleResetAll() {
+      if (!window.confirm("Wirklich alle Daten für euch beide löschen und neu starten?")) {
+        return;
+      }
+      state = defaultState();
+      saveState();
+      renderAll();
+    }
+
+    function renderCards() {
+      const cardsContainer = document.getElementById("cards");
+      cardsContainer.innerHTML = "";
+
+      const players = Object.values(state.players);
+
+      players.forEach((player) => {
+        const card = document.createElement("div");
+        card.className = "card";
+
+        const header = document.createElement("div");
+        header.className = "card-header";
+
+        const nameEl = document.createElement("div");
+        nameEl.className = "username";
+        nameEl.textContent = player.name;
+
+        const badge = document.createElement("div");
+        badge.className = "badge " + (player.isOnStreak ? "active" : "inactive");
+        badge.textContent = player.isOnStreak ? "ON STREAK" : "RELAPSED";
+
+        header.appendChild(nameEl);
+        header.appendChild(badge);
+        card.appendChild(header);
+
+        const nameInput = document.createElement("input");
+        nameInput.className = "username-input";
+        nameInput.value = player.name;
+        nameInput.placeholder = "Name ändern…";
+        nameInput.addEventListener("change", (e) =>
+          handleNameChange(player.id, e.target.value)
+        );
+        card.appendChild(nameInput);
+
+        const stats = document.createElement("div");
+        stats.className = "stats-row";
+
+        const streakNow = currentStreakDays(player);
+        const streakLine = document.createElement("div");
+        streakLine.innerHTML =
+          `Aktuelle Streak: <span class="highlight">${streakNow}</span> Tag(e)`;
+
+        const bestLine = document.createElement("div");
+        bestLine.innerHTML =
+          `Beste Streak: <span class="highlight">${player.bestStreak}</span> Tag(e)`;
+
+        const statusLine = document.createElement("div");
+        const checked = todayChecked(player);
+        statusLine.innerHTML =
+          `Heute: <span class="highlight">${
+            checked ? "bereits gecheckt ✅" : "noch nicht gecheckt"
+          }</span>`;
+
+        stats.appendChild(streakLine);
+        stats.appendChild(bestLine);
+        stats.appendChild(statusLine);
+
+        if (player.lastRelapseDate) {
+          const lastLine = document.createElement("div");
+          lastLine.textContent = "Letzter Rückfall: " + lastRelapseLabel(player);
+          stats.appendChild(lastLine);
+        } else {
+          const lastLine = document.createElement("div");
+          lastLine.textContent = "Letzter Rückfall: keiner gespeichert 🙌";
+          stats.appendChild(lastLine);
+        }
+
+        card.appendChild(stats);
+
+        const btnRow = document.createElement("div");
+        btnRow.className = "btn-row";
+
+        const btnClean = document.createElement("button");
+        btnClean.className = "btn-clean";
+        btnClean.innerHTML = "✅ Heute clean";
+        btnClean.addEventListener("click", () => handleCheckClean(player.id));
+
+        const btnRelapse = document.createElement("button");
+        btnRelapse.className = "btn-relapse";
+        btnRelapse.innerHTML = "💥 Heute Rückfall";
+        btnRelapse.addEventListener("click", () => handleRelapse(player.id));
+
+        btnRow.appendChild(btnClean);
+        btnRow.appendChild(btnRelapse);
+
+        card.appendChild(btnRow);
+
+        if (player.lastRelapseDate || player.lastRelapseReason) {
+          const note = document.createElement("div");
+          note.className = "relapse-note";
+
+          const title = document.createElement("div");
+          title.className = "relapse-note-title";
+          title.textContent = "Letzter Rückfall – Notiz";
+
+          const body = document.createElement("div");
+          body.textContent = player.lastRelapseReason
+            ? player.lastRelapseReason
+            : "Kein Grund eingetragen.";
+
+          note.appendChild(title);
+          note.appendChild(body);
+          card.appendChild(note);
+        }
+
+        const info = document.createElement("div");
+        info.className = "small-muted";
+        info.textContent =
+          "Hinweis: Nur du siehst diese Daten – sie werden lokal im Browser gespeichert.";
+        card.appendChild(info);
+
+        cardsContainer.appendChild(card);
+      });
+    }
+
+    function renderSummary() {
+      const summary = document.getElementById("summary");
+      summary.innerHTML = "";
+
+      const players = Object.values(state.players);
+
+      // Übersichtstabelle
+      const overviewCard = document.createElement("div");
+      overviewCard.className = "summary-card";
+
+      const overviewTitle = document.createElement("div");
+      overviewTitle.className = "summary-title";
+      overviewTitle.textContent = "📊 Übersicht – ihr beide";
+      overviewCard.appendChild(overviewTitle);
+
+      const tbl = document.createElement("table");
+      const headRow = document.createElement("tr");
+      headRow.innerHTML =
+        "<th>Person</th><th>Aktuelle Streak</th><th>Beste Streak</th><th>Letzter Rückfall</th>";
+      tbl.appendChild(headRow);
+
+      players.forEach((p) => {
+        const tr = document.createElement("tr");
+        const streakNow = currentStreakDays(p);
+        const lastLabel = p.lastRelapseDate ? lastRelapseLabel(p) : "Keiner 🙌";
+        tr.innerHTML = `
+          <td>${p.name}</td>
+          <td>${streakNow} Tag(e)</td>
+          <td>${p.bestStreak} Tag(e)</td>
+          <td>${lastLabel}</td>
+        `;
+        tbl.appendChild(tr);
+      });
+
+      overviewCard.appendChild(tbl);
+      summary.appendChild(overviewCard);
+
+      // Duell-Card (wenn genau 2 Personen)
+      if (players.length === 2) {
+        const duelCard = document.createElement("div");
+        duelCard.className = "summary-card";
+
+        const duelTitle = document.createElement("div");
+        duelTitle.className = "summary-title";
+        duelTitle.textContent = "⚔️ Duell – wer führt?";
+        duelCard.appendChild(duelTitle);
+
+        const [a, b] = players;
+        const aStreak = currentStreakDays(a);
+        const bStreak = currentStreakDays(b);
+
+        let lineStreak = "";
+        if (aStreak > bStreak) {
+          lineStreak = `👑 ${a.name} führt in der aktuellen Streak (${aStreak} vs. ${bStreak} Tag(e)).`;
+        } else if (bStreak > aStreak) {
+          lineStreak = `👑 ${b.name} führt in der aktuellen Streak (${bStreak} vs. ${aStreak} Tag(e)).`;
+        } else {
+          lineStreak = `🤝 Ihr seid gleichauf mit ${aStreak} Tag(en) Streak.`;
+        }
+
+        const p1 = document.createElement("div");
+        p1.className = "duel-line";
+        p1.textContent = lineStreak;
+
+        const aBest = a.bestStreak;
+        const bBest = b.bestStreak;
+        let lineBest = "";
+        if (aBest > bBest) {
+          lineBest = `🏅 ${a.name} hält den Rekord mit ${aBest} Tag(en) am Stück.`;
+        } else if (bBest > aBest) {
+          lineBest = `🏅 ${b.name} hält den Rekord mit ${bBest} Tag(en) am Stück.`;
+        } else {
+          lineBest = `🏅 Eure Bestleistungen sind gleich: ${aBest} Tag(e).`;
+        }
+
+        const p2 = document.createElement("div");
+        p2.className = "duel-line";
+        p2.textContent = lineBest;
+
+        duelCard.appendChild(p1);
+        duelCard.appendChild(p2);
+        summary.appendChild(duelCard);
+      }
+    }
+
+    function renderMeta() {
+      const subtitle = document.getElementById("subtitle");
+      const footer = document.getElementById("footer");
+      const now = new Date();
+      subtitle.textContent =
+        `Jeden Tag gemeinsam checken, ob ihr noch auf Streak seid. Stand: ${now.toLocaleString()}`;
+
+      footer.innerHTML =
+        'Daten werden nur im lokalen Speicher deines Browsers gehalten (localStorage). ' +
+        "Wenn du den Speicher löschst oder einen anderen Browser nutzt, fängst du hier neu an.";
+    }
+
+    function renderAll() {
+      renderCards();
+      renderSummary();
+      renderMeta();
+    }
+
+    let state = loadState();
+
+    function init() {
+      const resetBtn = document.getElementById("resetAll");
+      resetBtn.addEventListener("click", handleResetAll);
+      renderAll();
+    }
+
+    init();
+  </script>
+</body>
+</html>
