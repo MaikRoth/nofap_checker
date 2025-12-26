@@ -2,290 +2,650 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>NoFap Streak – Friends Dashboard (Shared)</title>
+  <title>NoFap Streak – Vaporwave Tally Dashboard</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: #050816;
-      color: #e5e7eb;
+      color-scheme: dark;
+      --bg-main: radial-gradient(circle at top, #f9a8ff 0, #8b5cf6 28%, #0f172a 70%, #020617 100%);
+      --glass: rgba(15, 23, 42, 0.7);
+      --border-glass: rgba(148, 163, 184, 0.8);
+      --neon-pink: #f472b6;
+      --neon-cyan: #22d3ee;
+      --neon-yellow: #facc15;
+      --accent-green: #22c55e;
+      --accent-red: #fb7185;
+      --accent-purple: #a855f7;
+      --ink-soft: #cbd5f5;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
       margin: 0;
-      padding: 2rem;
+      min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 2rem;
+      justify-content: flex-start;
+      padding: 1.4rem 0.8rem 2rem;
+      background: var(--bg-main);
+      font-family: var(--font-main);
+      color: #e5e7eb;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Low-poly background accents */
+
+    .poly {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.45;
+      filter: blur(0.2px);
+      mix-blend-mode: screen;
+    }
+
+    .poly.p1 {
+      top: -8vh;
+      left: -12vw;
+      width: 40vw;
+      height: 40vh;
+      background: linear-gradient(135deg, #f97316, #ec4899);
+      clip-path: polygon(0% 0%, 80% 0%, 100% 45%, 30% 100%, 0% 65%);
+    }
+
+    .poly.p2 {
+      bottom: -15vh;
+      right: -15vw;
+      width: 45vw;
+      height: 50vh;
+      background: linear-gradient(135deg, #22c55e, #22d3ee);
+      clip-path: polygon(20% 0%, 100% 10%, 80% 70%, 10% 100%, 0% 40%);
+    }
+
+    .poly.p3 {
+      top: 20vh;
+      right: 10vw;
+      width: 24vw;
+      height: 26vh;
+      background: radial-gradient(circle at 20% 0%, #a855f7, #0ea5e9);
+      clip-path: polygon(0% 20%, 60% 0%, 100% 50%, 65% 100%, 10% 80%);
+      opacity: 0.35;
+    }
+
+    /* Shell / Glass layer */
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 1040px;
+      padding: 0.9rem 1rem 1.3rem;
+      border-radius: 1.4rem;
+      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.78));
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      box-shadow:
+        0 25px 50px rgba(15, 23, 42, 0.95),
+        0 0 0 1px rgba(15, 23, 42, 0.8);
+      backdrop-filter: blur(24px);
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.9rem;
+      margin-bottom: 0.9rem;
+    }
+
+    @media (max-width: 650px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .logo-line {
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .logo-pill {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 20% 0, #facc15, #fb7185 40%, #4c1d95 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow:
+        0 0 24px rgba(248, 113, 113, 0.9),
+        0 0 40px rgba(236, 72, 153, 0.7);
     }
 
     h1 {
       margin: 0;
-      font-size: 2rem;
-      text-align: center;
+      font-size: 1.5rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: #f9fafb;
+    }
+
+    .tagline {
+      font-size: 0.78rem;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
     }
 
     .subtitle {
+      font-size: 0.8rem;
       color: #9ca3af;
-      font-size: 0.9rem;
-      text-align: center;
+      margin-top: 0.25rem;
+    }
+
+    .status-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.35rem;
+      font-size: 0.78rem;
+    }
+
+    @media (max-width: 650px) {
+      .status-block {
+        align-items: flex-start;
+      }
+    }
+
+    .status-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .status-dot {
+      width: 11px;
+      height: 11px;
+      border-radius: 999px;
+      box-shadow: 0 0 12px rgba(248, 113, 113, 0.9);
+      background: #f97316;
+    }
+
+    .status-label {
+      font-weight: 500;
+      color: #e5e7eb;
+    }
+
+    .status-hint {
+      font-size: 0.75rem;
+      color: #9ca3af;
     }
 
     main {
-      width: 100%;
-      max-width: 1100px;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
+      margin-top: 0.3rem;
     }
 
-    .grid {
+    .layout {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
-      width: 100%;
+      grid-template-columns: minmax(0, 3fr) minmax(260px, 2fr);
+      gap: 1rem;
+    }
+
+    @media (max-width: 880px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .column-title {
+      font-size: 0.9rem;
+      color: #e5e7eb;
+      opacity: 0.85;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .column-note {
+      font-size: 0.78rem;
+      color: #9ca3af;
+      margin-bottom: 0.45rem;
+    }
+
+    .spark {
+      width: 16px;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(to right, var(--neon-cyan), var(--neon-pink));
+      box-shadow:
+        0 0 8px rgba(34, 211, 238, 0.9),
+        0 0 12px rgba(244, 114, 182, 0.9);
+    }
+
+    /* Buttons */
+
+    button {
+      font-family: inherit;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      padding: 0.3rem 0.9rem;
+      font-size: 0.78rem;
+      cursor: pointer;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.9));
+      color: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      box-shadow:
+        0 10px 20px rgba(15, 23, 42, 0.95),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      transform: translateY(0);
+      transition: transform 0.07s ease, box-shadow 0.07s ease, border-color 0.07s ease, background 0.07s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 16px 30px rgba(15, 23, 42, 0.95),
+        0 0 18px rgba(56, 189, 248, 0.6);
+      border-color: rgba(56, 189, 248, 0.9);
+      background: radial-gradient(circle at top, rgba(30, 64, 175, 1), rgba(15, 23, 42, 0.96));
+    }
+
+    button:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.95);
+    }
+
+    .btn-clean {
+      border-color: rgba(34, 197, 94, 0.9);
+      background: radial-gradient(circle at top left, rgba(22, 163, 74, 0.9), rgba(15, 23, 42, 0.96));
+    }
+
+    .btn-relapse {
+      border-color: rgba(248, 113, 113, 0.95);
+      background: radial-gradient(circle at top left, rgba(248, 113, 113, 0.9), rgba(15, 23, 42, 0.95));
+    }
+
+    .btn-reset-all {
+      border-color: rgba(244, 114, 182, 0.95);
+      background: radial-gradient(circle at top, rgba(244, 114, 182, 0.9), rgba(76, 29, 149, 0.98));
+      font-size: 0.8rem;
+    }
+
+    /* Player cards – glassy neon */
+
+    #cards {
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
     }
 
     .card {
-      background: radial-gradient(circle at top, #111827, #020617);
+      position: relative;
       border-radius: 1rem;
-      padding: 1.2rem 1.4rem;
-      border: 1px solid #1f2937;
-      box-shadow: 0 18px 45px rgba(0,0,0,0.6);
+      padding: 0.8rem 0.85rem 0.9rem;
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.95),
+        rgba(15, 23, 42, 0.9),
+        rgba(30, 64, 175, 0.9)
+      );
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      overflow: hidden;
     }
 
-    .card-header {
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        radial-gradient(circle at 10% 0%, rgba(236, 72, 153, 0.4), transparent 55%),
+        radial-gradient(circle at 80% 100%, rgba(56, 189, 248, 0.3), transparent 55%);
+      opacity: 0.8;
+      mix-blend-mode: screen;
+      pointer-events: none;
+    }
+
+    .card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .card-header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.4rem;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
     }
 
     .username {
-      font-weight: 600;
       font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .badge {
+      padding: 0.16rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      white-space: nowrap;
+      background: rgba(15, 23, 42, 0.7);
+      box-shadow: 0 0 14px rgba(15, 23, 42, 0.9);
+    }
+
+    .badge span.dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+    }
+
+    .badge.active {
+      border-color: rgba(34, 197, 94, 0.95);
+      color: #bbf7d0;
+    }
+    .badge.active span.dot {
+      background: var(--accent-green);
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
+    }
+
+    .badge.inactive {
+      border-color: rgba(248, 113, 113, 0.95);
+      color: #fecaca;
+    }
+    .badge.inactive span.dot {
+      background: var(--accent-red);
+      box-shadow: 0 0 12px rgba(248, 113, 113, 0.9);
     }
 
     .username-input {
-      margin-top: 0.35rem;
+      margin-top: 0.25rem;
       width: 100%;
-      padding: 0.25rem 0.5rem;
-      border-radius: 999px;
-      border: 1px solid #374151;
-      background: #020617;
+      padding: 0.3rem 0.6rem;
+      border-radius: 0.6rem;
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      background: rgba(15, 23, 42, 0.8);
       color: #e5e7eb;
       font-size: 0.8rem;
       outline: none;
     }
 
     .username-input:focus {
-      border-color: #60a5fa;
+      border-color: rgba(56, 189, 248, 0.95);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.9);
     }
 
-    .badge {
-      padding: 0.2rem 0.6rem;
-      border-radius: 999px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      white-space: nowrap;
-    }
-
-    .badge.active {
-      background: #065f46;
-      color: #bbf7d0;
-    }
-
-    .badge.inactive {
-      background: #7f1d1d;
-      color: #fecaca;
-    }
-
-    .section-title {
-      margin-top: 0.8rem;
-      font-size: 0.9rem;
-      font-weight: 600;
-      color: #d1d5db;
-    }
-
-    .stats-row {
-      margin-top: 0.4rem;
+    .stats-block {
+      margin-top: 0.35rem;
       font-size: 0.82rem;
-      color: #d1d5db;
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+
+    .stat-line-label {
+      font-size: 0.76rem;
+      color: #9ca3af;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .stat-line {
       display: flex;
       flex-direction: column;
       gap: 0.15rem;
     }
 
-    .highlight {
-      color: #facc15;
-      font-weight: 600;
+    .tally-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+      align-items: flex-end;
     }
 
-    .small-muted {
-      font-size: 0.75rem;
+    .tally-label-number {
+      font-size: 0.8rem;
+      color: #e5e7eb;
+    }
+
+    /* Tally visualization */
+
+    .tally-group {
+      display: inline-flex;
+      align-items: flex-end;
+      margin-right: 0.25rem;
+      position: relative;
+      height: 18px;
+    }
+
+    .tally-stick {
+      width: 2px;
+      height: 16px;
+      border-radius: 999px;
+      margin-right: 3px;
+      background: linear-gradient(to bottom, #e5e7eb, #a5b4fc);
+      box-shadow: 0 0 4px rgba(191, 219, 254, 0.8);
+    }
+
+    .tally-stick:last-child {
+      margin-right: 0;
+    }
+
+    .tally-diagonal {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(to right, var(--neon-pink), var(--neon-yellow));
+      box-shadow: 0 0 6px rgba(244, 114, 182, 0.8);
+      transform: rotate(-45deg);
+      transform-origin: center;
+      top: 7px;
+    }
+
+    .tally-empty {
+      font-size: 0.8rem;
+      color: #9ca3af;
+      font-style: italic;
+    }
+
+    .btn-row {
+      margin-top: 0.45rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .info-line {
+      margin-top: 0.4rem;
+      font-size: 0.74rem;
       color: #9ca3af;
     }
 
-    /* Buttons */
-    .btn-row {
-      margin-top: 0.8rem;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
-
-    button {
-      font-family: inherit;
-      border-radius: 999px;
-      border: 1px solid #1f2937;
-      padding: 0.3rem 0.8rem;
-      font-size: 0.8rem;
-      cursor: pointer;
-      background: #020617;
-      color: #e5e7eb;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.25rem;
-      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.1s ease, border-color 0.1s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.5);
-      border-color: #374151;
-    }
-
-    button:active {
-      transform: translateY(0);
-      box-shadow: 0 6px 14px rgba(0,0,0,0.4);
-    }
-
-    .btn-clean {
-      border-color: #166534;
-    }
-
-    .btn-relapse {
-      border-color: #b91c1c;
-    }
-
-    .btn-reset-all {
-      align-self: center;
-      padding-inline: 1.1rem;
-      border-color: #f97316;
-      background: radial-gradient(circle at top, #111827, #020617);
-    }
-
-    /* Relapse notes */
     .relapse-note {
-      margin-top: 0.5rem;
+      margin-top: 0.35rem;
       font-size: 0.78rem;
-      color: #fecaca;
-      background: rgba(127,29,29,0.3);
-      border-radius: 0.5rem;
-      padding: 0.4rem 0.5rem;
-      border: 1px solid #7f1d1d;
+      border-radius: 0.7rem;
+      background: radial-gradient(circle at 0 0, rgba(248, 113, 113, 0.35), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(248, 113, 113, 0.9);
+      padding: 0.45rem 0.55rem;
     }
 
     .relapse-note-title {
       font-weight: 600;
       margin-bottom: 0.1rem;
+      font-size: 0.8rem;
+      color: #fecaca;
     }
 
-    /* Summary / leaderboards */
+    .relapse-note-body {
+      font-size: 0.78rem;
+      color: #fee2e2;
+    }
+
+    /* Summary */
+
     #summary {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-    }
-
-    .summary-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.3rem;
+      gap: 0.6rem;
     }
 
     .summary-card {
-      background: #020617;
-      border-radius: 0.75rem;
-      border: 1px solid #1f2937;
-      padding: 1rem 1.2rem;
+      border-radius: 0.9rem;
+      padding: 0.6rem 0.7rem 0.7rem;
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.96),
+        rgba(30, 64, 175, 0.94)
+      );
+      border: 1px solid rgba(148, 163, 184, 0.8);
+      box-shadow:
+        0 12px 24px rgba(15, 23, 42, 0.9),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+    }
+
+    .summary-title {
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .summary-title .emoji {
+      font-size: 1rem;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
     }
 
     th, td {
-      padding: 0.3rem 0.4rem;
+      padding: 0.2rem 0.15rem;
       text-align: left;
     }
 
     th {
-      color: #d1d5db;
-      border-bottom: 1px solid #1f2937;
+      color: #c7d2fe;
+      border-bottom: 1px solid rgba(55, 65, 81, 0.9);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
     }
 
     tr:nth-child(even) td {
-      background: rgba(15,23,42,0.4);
+      background: rgba(15, 23, 42, 0.7);
     }
 
     .duel-line {
+      margin-top: 0.25rem;
       font-size: 0.8rem;
-      margin-bottom: 0.2rem;
       color: #e5e7eb;
     }
 
     footer {
-      font-size: 0.8rem;
-      color: #6b7280;
+      position: relative;
+      z-index: 1;
+      font-size: 0.74rem;
+      color: #e5e7eb;
+      margin-top: 0.7rem;
       text-align: center;
-    }
-
-    a {
-      color: #60a5fa;
-    }
-
-    @media (max-width: 600px) {
-      body {
-        padding: 1.5rem 1rem;
-      }
+      text-shadow: 0 2px 4px rgba(15, 23, 42, 0.9);
     }
   </style>
 </head>
 <body>
-  <main>
-    <header style="text-align:center;">
-      <h1>🚫 NoFap Streak Dashboard</h1>
-      <p class="subtitle" id="subtitle">
-        Verbinde mit Online-Speicher…
-      </p>
+  <!-- Low poly accents -->
+  <div class="poly p1"></div>
+  <div class="poly p2"></div>
+  <div class="poly p3"></div>
+
+  <div class="shell">
+    <header>
+      <div class="title-block">
+        <div class="logo-line">
+          <div class="logo-pill">🚫</div>
+          <div>
+            <h1>NOFAP STREAK</h1>
+            <div class="tagline">MELLOW VAPORWAVE TALLY BOARD</div>
+          </div>
+        </div>
+        <div class="subtitle" id="subtitle">Lade gemeinsamen Stand…</div>
+      </div>
+      <div class="status-block">
+        <div class="status-row">
+          <div class="status-dot" id="statusDot"></div>
+          <div class="status-label" id="statusLabel">Offline</div>
+        </div>
+        <div class="status-hint">Beide sehen denselben Stand – Firebase Sync</div>
+        <button id="resetAll" class="btn-reset-all">🔄 Neu starten (für euch beide)</button>
+      </div>
     </header>
 
-    <button id="resetAll" class="btn-reset-all">
-      🔄 Alles zurücksetzen (für euch beide)
-    </button>
+    <main>
+      <div class="layout">
+        <section>
+          <div class="column-title">
+            <div class="spark"></div>
+            <span>Strichlisten</span>
+          </div>
+          <div class="column-note">
+            Jeden Tag kurz auf <strong>„Heute clean“</strong> drücken. Eure Streak wächst als |||| mit dem fünften quer.
+          </div>
+          <div id="cards"></div>
+        </section>
 
-    <!-- Player cards -->
-    <section class="grid" id="cards"></section>
-
-    <!-- Global overview -->
-    <section id="summary"></section>
-  </main>
+        <section>
+          <div class="column-title">
+            <div class="spark"></div>
+            <span>Übersicht & Duell</span>
+          </div>
+          <div class="column-note">
+            Für euch beide identisch – perfekt zum gegenseitigen Accountability checken.
+          </div>
+          <section id="summary"></section>
+        </section>
+      </div>
+    </main>
+  </div>
 
   <footer id="footer"></footer>
 
-  <!-- Firebase CDN (Compat API für einfache Einbindung) -->
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
-    // === HIER DEIN FIREBASE CONFIG EINFÜGEN ===
-    // Hole das Objekt aus der Firebase-Konsole (Web-App Setup)
-    const firebaseConfig = {
+    // === HIER DEINE FIREBASE CONFIG EINFÜGEN ===
+     const firebaseConfig = {
     apiKey: "AIzaSyAVyb0c_fr9mIWW0HoCg_ZVxJAS3h9ZnXM",
     authDomain: "nofap-checker.firebaseapp.com",
     databaseURL: "https://nofap-checker-default-rtdb.europe-west1.firebasedatabase.app",
@@ -296,13 +656,11 @@
     measurementId: "G-HNWQVTZZNN"
 };
     // ==========================================
-
-    // Eine "Room-ID", falls du später mehrere Gruppen haben willst
     const ROOM_ID = "friends-room-1";
 
     const DEFAULT_PLAYERS = [
-      { id: "p1", name: "Maik" },
-      { id: "p2", name: "Marvin" }
+      { id: "p1", name: "Du" },
+      { id: "p2", name: "Freund" }
     ];
 
     let db = null;
@@ -310,7 +668,7 @@
     let hasInitialLoad = false;
 
     function todayDateStr() {
-      return new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+      return new Date().toISOString().slice(0, 10);
     }
 
     function parseDate(str) {
@@ -360,7 +718,6 @@
         if (p.lastRelapseReason === undefined) p.lastRelapseReason = "";
         if (p.lastCheckDate === undefined) p.lastCheckDate = null;
       }
-      // falls noch keine Default-Spieler existieren, ergänzen
       DEFAULT_PLAYERS.forEach((dp) => {
         if (!state.players[dp.id]) {
           state.players[dp.id] = {
@@ -381,7 +738,7 @@
       if (!player.isOnStreak || !player.streakStart) return 0;
       const start = parseDate(player.streakStart);
       const today = new Date();
-      return daysBetween(start, today) + 1; // inkl. heute
+      return daysBetween(start, today) + 1;
     }
 
     function lastRelapseLabel(player) {
@@ -399,6 +756,20 @@
     function todayChecked(player) {
       if (!player.lastCheckDate) return false;
       return player.lastCheckDate === todayDateStr();
+    }
+
+    function updateStatus(connected) {
+      const dot = document.getElementById("statusDot");
+      const label = document.getElementById("statusLabel");
+      if (!connected) {
+        dot.style.background = "#f97316";
+        dot.style.boxShadow = "0 0 12px rgba(249,115,22,0.9)";
+        label.textContent = "Verbinde…";
+      } else {
+        dot.style.background = "#22c55e";
+        dot.style.boxShadow = "0 0 12px rgba(34,197,94,0.9)";
+        label.textContent = "Live verbunden";
+      }
     }
 
     function saveStateToFirebase() {
@@ -434,11 +805,8 @@
         `Was war der Grund für den Rückfall bei ${player.name}? (optional)`,
         player.lastRelapseReason || ""
       );
-      if (reason === null) {
-        return; // abgebrochen
-      }
+      if (reason === null) return;
 
-      // aktuelle Streak-Länge (bis gestern)
       let streakLen = 0;
       if (player.isOnStreak && player.streakStart) {
         const start = parseDate(player.streakStart);
@@ -471,18 +839,67 @@
     }
 
     function handleResetAll() {
-      if (!window.confirm("Wirklich alle Daten für euch beide im gemeinsamen Speicher löschen und neu starten?")) {
-        return;
-      }
+      if (!window.confirm("Wirklich alles für euch beide zurücksetzen?")) return;
       state = defaultState();
       saveStateToFirebase();
       renderAll();
     }
 
+    /* Tally Builder */
+
+    function buildTally(container, count) {
+      container.innerHTML = "";
+      if (count <= 0) {
+        const empty = document.createElement("span");
+        empty.className = "tally-empty";
+        empty.textContent = "noch keine Striche";
+        container.appendChild(empty);
+        return;
+      }
+
+      const maxShown = 60;
+      const shown = Math.min(count, maxShown);
+      const groups = Math.floor(shown / 5);
+      const rest = shown % 5;
+
+      for (let g = 0; g < groups; g++) {
+        const group = document.createElement("span");
+        group.className = "tally-group";
+
+        for (let i = 0; i < 4; i++) {
+          const stick = document.createElement("span");
+          stick.className = "tally-stick";
+          group.appendChild(stick);
+        }
+        const diag = document.createElement("span");
+        diag.className = "tally-diagonal";
+        group.appendChild(diag);
+
+        container.appendChild(group);
+      }
+
+      if (rest > 0) {
+        const group = document.createElement("span");
+        group.className = "tally-group";
+        for (let i = 0; i < rest; i++) {
+          const stick = document.createElement("span");
+          stick.className = "tally-stick";
+          group.appendChild(stick);
+        }
+        container.appendChild(group);
+      }
+
+      if (count > maxShown) {
+        const extra = document.createElement("span");
+        extra.className = "tally-label-number";
+        extra.textContent = `  +${count - maxShown}`;
+        container.appendChild(extra);
+      }
+    }
+
     function renderCards() {
       const cardsContainer = document.getElementById("cards");
       cardsContainer.innerHTML = "";
-
       if (!state || !state.players) return;
 
       const players = Object.values(state.players);
@@ -491,8 +908,11 @@
         const card = document.createElement("div");
         card.className = "card";
 
-        const header = document.createElement("div");
-        header.className = "card-header";
+        const inner = document.createElement("div");
+        inner.className = "card-inner";
+
+        const headerRow = document.createElement("div");
+        headerRow.className = "card-header-row";
 
         const nameEl = document.createElement("div");
         nameEl.className = "username";
@@ -500,11 +920,16 @@
 
         const badge = document.createElement("div");
         badge.className = "badge " + (player.isOnStreak ? "active" : "inactive");
-        badge.textContent = player.isOnStreak ? "ON STREAK" : "RELAPSED";
+        const dot = document.createElement("span");
+        dot.className = "dot";
+        const label = document.createElement("span");
+        label.textContent = player.isOnStreak ? "ON STREAK" : "RELAPSED";
+        badge.appendChild(dot);
+        badge.appendChild(label);
 
-        header.appendChild(nameEl);
-        header.appendChild(badge);
-        card.appendChild(header);
+        headerRow.appendChild(nameEl);
+        headerRow.appendChild(badge);
+        inner.appendChild(headerRow);
 
         const nameInput = document.createElement("input");
         nameInput.className = "username-input";
@@ -513,60 +938,106 @@
         nameInput.addEventListener("change", (e) =>
           handleNameChange(player.id, e.target.value)
         );
-        card.appendChild(nameInput);
+        inner.appendChild(nameInput);
 
         const stats = document.createElement("div");
-        stats.className = "stats-row";
+        stats.className = "stats-block";
 
-        const streakNow = currentStreakDays(player);
+        const current = currentStreakDays(player);
+
+        // Aktuelle Streak (Tally)
         const streakLine = document.createElement("div");
-        streakLine.innerHTML =
-          `Aktuelle Streak: <span class="highlight">${streakNow}</span> Tag(e)`;
+        streakLine.className = "stat-line";
 
-        const bestLine = document.createElement("div");
-        bestLine.innerHTML =
-          `Beste Streak: <span class="highlight">${player.bestStreak}</span> Tag(e)`;
+        const streakLabel = document.createElement("div");
+        streakLabel.className = "stat-line-label";
+        streakLabel.textContent = "Aktuelle Streak (inkl. heute):";
+        streakLine.appendChild(streakLabel);
 
-        const statusLine = document.createElement("div");
-        const checked = todayChecked(player);
-        statusLine.innerHTML =
-          `Heute: <span class="highlight">${
-            checked ? "bereits gecheckt ✅" : "noch nicht gecheckt"
-          }</span>`;
+        const streakTallyRow = document.createElement("div");
+        streakTallyRow.className = "tally-row";
 
+        const streakTallyContainer = document.createElement("div");
+        buildTally(streakTallyContainer, current);
+
+        const streakNumber = document.createElement("span");
+        streakNumber.className = "tally-label-number";
+        streakNumber.textContent = ` (${current} Tag(e))`;
+
+        streakTallyRow.appendChild(streakTallyContainer);
+        streakTallyRow.appendChild(streakNumber);
+        streakLine.appendChild(streakTallyRow);
         stats.appendChild(streakLine);
+
+        // Beste Streak
+        const bestLine = document.createElement("div");
+        bestLine.className = "stat-line";
+
+        const bestLabel = document.createElement("div");
+        bestLabel.className = "stat-line-label";
+        bestLabel.textContent = "Beste Streak:";
+        bestLine.appendChild(bestLabel);
+
+        const bestTallyRow = document.createElement("div");
+        bestTallyRow.className = "tally-row";
+
+        const bestTallyContainer = document.createElement("div");
+        buildTally(bestTallyContainer, player.bestStreak);
+
+        const bestNumber = document.createElement("span");
+        bestNumber.className = "tally-label-number";
+        bestNumber.textContent = ` (${player.bestStreak} Tag(e))`;
+
+        bestTallyRow.appendChild(bestTallyContainer);
+        bestTallyRow.appendChild(bestNumber);
+        bestLine.appendChild(bestTallyRow);
         stats.appendChild(bestLine);
-        stats.appendChild(statusLine);
 
-        if (player.lastRelapseDate) {
-          const lastLine = document.createElement("div");
-          lastLine.textContent = "Letzter Rückfall: " + lastRelapseLabel(player);
-          stats.appendChild(lastLine);
-        } else {
-          const lastLine = document.createElement("div");
-          lastLine.textContent = "Letzter Rückfall: keiner gespeichert 🙌";
-          stats.appendChild(lastLine);
-        }
+        // Heute / letzter Rückfall
+        const todayLine = document.createElement("div");
+        todayLine.className = "stat-line";
+        const todayLabelEl = document.createElement("div");
+        todayLabelEl.className = "stat-line-label";
+        todayLabelEl.textContent = "Heute:";
+        const todayText = document.createElement("div");
+        todayText.textContent = todayChecked(player)
+          ? "Schon markiert ✅"
+          : "Noch nicht markiert";
+        todayLine.appendChild(todayLabelEl);
+        todayLine.appendChild(todayText);
+        stats.appendChild(todayLine);
 
-        card.appendChild(stats);
+        const relapseLine = document.createElement("div");
+        relapseLine.className = "stat-line";
+        const relapseLabel = document.createElement("div");
+        relapseLabel.className = "stat-line-label";
+        relapseLabel.textContent = "Letzter Rückfall:";
+        const relapseText = document.createElement("div");
+        relapseText.textContent = player.lastRelapseDate
+          ? lastRelapseLabel(player)
+          : "Keiner gespeichert 🙌";
+        relapseLine.appendChild(relapseLabel);
+        relapseLine.appendChild(relapseText);
+        stats.appendChild(relapseLine);
+
+        inner.appendChild(stats);
 
         const btnRow = document.createElement("div");
         btnRow.className = "btn-row";
 
         const btnClean = document.createElement("button");
         btnClean.className = "btn-clean";
-        btnClean.innerHTML = "✅ Heute clean";
+        btnClean.textContent = "✅ Heute clean";
         btnClean.addEventListener("click", () => handleCheckClean(player.id));
 
         const btnRelapse = document.createElement("button");
         btnRelapse.className = "btn-relapse";
-        btnRelapse.innerHTML = "💥 Heute Rückfall";
+        btnRelapse.textContent = "💥 Heute Rückfall";
         btnRelapse.addEventListener("click", () => handleRelapse(player.id));
 
         btnRow.appendChild(btnClean);
         btnRow.appendChild(btnRelapse);
-
-        card.appendChild(btnRow);
+        inner.appendChild(btnRow);
 
         if (player.lastRelapseDate || player.lastRelapseReason) {
           const note = document.createElement("div");
@@ -574,24 +1045,26 @@
 
           const title = document.createElement("div");
           title.className = "relapse-note-title";
-          title.textContent = "Letzter Rückfall – Notiz";
+          title.textContent = "Notiz zum letzten Rückfall";
 
           const body = document.createElement("div");
+          body.className = "relapse-note-body";
           body.textContent = player.lastRelapseReason
             ? player.lastRelapseReason
             : "Kein Grund eingetragen.";
 
           note.appendChild(title);
           note.appendChild(body);
-          card.appendChild(note);
+          inner.appendChild(note);
         }
 
         const info = document.createElement("div");
-        info.className = "small-muted";
+        info.className = "info-line";
         info.textContent =
-          "Gemeinsamer Online-Stand: Alles wird in einer Firebase Realtime Database gespeichert.";
-        card.appendChild(info);
+          "Dieser Stand ist für euch beide derselbe – Änderungen siehst du sofort auf beiden Geräten.";
+        inner.appendChild(info);
 
+        card.appendChild(inner);
         cardsContainer.appendChild(card);
       });
     }
@@ -599,18 +1072,16 @@
     function renderSummary() {
       const summary = document.getElementById("summary");
       summary.innerHTML = "";
-
       if (!state || !state.players) return;
 
       const players = Object.values(state.players);
 
-      // Übersichtstabelle
       const overviewCard = document.createElement("div");
       overviewCard.className = "summary-card";
 
       const overviewTitle = document.createElement("div");
       overviewTitle.className = "summary-title";
-      overviewTitle.textContent = "📊 Übersicht – ihr beide";
+      overviewTitle.innerHTML = '<span class="emoji">📋</span><span>Gesamtübersicht</span>';
       overviewCard.appendChild(overviewTitle);
 
       const tbl = document.createElement("table");
@@ -635,14 +1106,13 @@
       overviewCard.appendChild(tbl);
       summary.appendChild(overviewCard);
 
-      // Duell-Card (wenn genau 2 Personen)
       if (players.length === 2) {
         const duelCard = document.createElement("div");
         duelCard.className = "summary-card";
 
         const duelTitle = document.createElement("div");
         duelTitle.className = "summary-title";
-        duelTitle.textContent = "⚔️ Duell – wer führt?";
+        duelTitle.innerHTML = '<span class="emoji">⚔️</span><span>Duell</span>';
         duelCard.appendChild(duelTitle);
 
         const [a, b] = players;
@@ -651,11 +1121,11 @@
 
         let lineStreak = "";
         if (aStreak > bStreak) {
-          lineStreak = `👑 ${a.name} führt in der aktuellen Streak (${aStreak} vs. ${bStreak} Tag(e)).`;
+          lineStreak = `👑 ${a.name} führt aktuell (${aStreak} vs. ${bStreak} Tag(e)).`;
         } else if (bStreak > aStreak) {
-          lineStreak = `👑 ${b.name} führt in der aktuellen Streak (${bStreak} vs. ${aStreak} Tag(e)).`;
+          lineStreak = `👑 ${b.name} führt aktuell (${bStreak} vs. ${aStreak} Tag(e)).`;
         } else {
-          lineStreak = `🤝 Ihr seid gleichauf mit ${aStreak} Tag(en) Streak.`;
+          lineStreak = `🤝 Gleichstand – beide ${aStreak} Tag(e).`;
         }
 
         const p1 = document.createElement("div");
@@ -666,11 +1136,11 @@
         const bBest = b.bestStreak;
         let lineBest = "";
         if (aBest > bBest) {
-          lineBest = `🏅 ${a.name} hält den Rekord mit ${aBest} Tag(en) am Stück.`;
+          lineBest = `🏅 Rekord: ${a.name} mit ${aBest} Tag(en).`;
         } else if (bBest > aBest) {
-          lineBest = `🏅 ${b.name} hält den Rekord mit ${bBest} Tag(en) am Stück.`;
+          lineBest = `🏅 Rekord: ${b.name} mit ${bBest} Tag(en).`;
         } else {
-          lineBest = `🏅 Eure Bestleistungen sind gleich: ${aBest} Tag(e).`;
+          lineBest = `🏅 Eure Rekorde sind gleich hoch: ${aBest} Tag(e).`;
         }
 
         const p2 = document.createElement("div");
@@ -679,30 +1149,27 @@
 
         duelCard.appendChild(p1);
         duelCard.appendChild(p2);
+
         summary.appendChild(duelCard);
       }
     }
 
-    function renderMeta(connected) {
+    function renderMeta() {
       const subtitle = document.getElementById("subtitle");
       const footer = document.getElementById("footer");
       const now = new Date();
 
-      if (!connected) {
-        subtitle.textContent = "Verbinde mit Online-Speicher…";
-      } else {
-        subtitle.textContent =
-          `Ihr seht denselben Stand – gespeichert in Firebase. Stand: ${now.toLocaleString()}`;
-      }
-
-      footer.innerHTML =
-        "Diese Seite läuft statisch (z.B. GitHub Pages) und nutzt Firebase Realtime Database als gemeinsamen Speicher für euch beide.";
+      subtitle.textContent =
+        `Jeder Tag ein Strich. Stand: ${now.toLocaleString()}`;
+      footer.textContent =
+        "Statische Seite (z.B. GitHub Pages) + Firebase Realtime Database als gemeinsamer Speicher.";
     }
 
     function renderAll() {
       renderCards();
       renderSummary();
-      renderMeta(hasInitialLoad);
+      renderMeta();
+      updateStatus(hasInitialLoad);
     }
 
     function initFirebaseAndSubscribe() {
@@ -711,7 +1178,7 @@
         db = firebase.database();
       } catch (e) {
         console.error("Fehler beim Initialisieren von Firebase:", e);
-        renderMeta(false);
+        updateStatus(false);
         return;
       }
 
@@ -733,14 +1200,14 @@
       }, (err) => {
         console.error("Fehler beim Lesen von Firebase:", err);
         hasInitialLoad = false;
-        renderMeta(false);
+        updateStatus(false);
       });
     }
 
     function init() {
       const resetBtn = document.getElementById("resetAll");
       resetBtn.addEventListener("click", handleResetAll);
-      renderMeta(false);
+      renderMeta();
       initFirebaseAndSubscribe();
     }
 
