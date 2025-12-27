@@ -2,21 +2,18 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>NoFap Streak – Vaporwave Tally Dashboard</title>
+  <title>NoFap Streak – Dual Timeline Dojo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
       color-scheme: dark;
-      --bg-main: radial-gradient(circle at top, #f9a8ff 0, #8b5cf6 28%, #0f172a 70%, #020617 100%);
-      --glass: rgba(15, 23, 42, 0.7);
-      --border-glass: rgba(148, 163, 184, 0.8);
-      --neon-pink: #f472b6;
-      --neon-cyan: #22d3ee;
-      --neon-yellow: #facc15;
-      --accent-green: #22c55e;
-      --accent-red: #fb7185;
-      --accent-purple: #a855f7;
-      --ink-soft: #cbd5f5;
+      --bg-main: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
+      --accent-left: #38bdf8;
+      --accent-right: #fb7185;
+      --accent-axis: #e5e7eb;
+      --accent-soft: #9ca3af;
+      --card-bg: rgba(15, 23, 42, 0.96);
+      --border-subtle: rgba(148, 163, 184, 0.8);
       --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
 
@@ -31,79 +28,76 @@
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
-      padding: 1.4rem 0.8rem 2rem;
+      padding: 1.4rem 0.9rem 2rem;
       background: var(--bg-main);
       font-family: var(--font-main);
       color: #e5e7eb;
       overflow-x: hidden;
-      position: relative;
     }
 
-    /* Low-poly background accents */
+    /* Low-poly style background wedges */
 
     .poly {
       position: fixed;
       pointer-events: none;
-      z-index: 0;
-      opacity: 0.45;
+      opacity: 0.35;
       filter: blur(0.2px);
       mix-blend-mode: screen;
+      z-index: 0;
     }
 
     .poly.p1 {
-      top: -8vh;
-      left: -12vw;
-      width: 40vw;
-      height: 40vh;
-      background: linear-gradient(135deg, #f97316, #ec4899);
-      clip-path: polygon(0% 0%, 80% 0%, 100% 45%, 30% 100%, 0% 65%);
+      top: -12vh;
+      left: -18vw;
+      width: 42vw;
+      height: 42vh;
+      background: linear-gradient(135deg, #0f766e, #22d3ee);
+      clip-path: polygon(0% 0%, 80% 0%, 100% 50%, 20% 100%, 0% 60%);
     }
 
     .poly.p2 {
-      bottom: -15vh;
-      right: -15vw;
-      width: 45vw;
+      bottom: -20vh;
+      right: -16vw;
+      width: 46vw;
       height: 50vh;
-      background: linear-gradient(135deg, #22c55e, #22d3ee);
-      clip-path: polygon(20% 0%, 100% 10%, 80% 70%, 10% 100%, 0% 40%);
+      background: linear-gradient(135deg, #a855f7, #ec4899);
+      clip-path: polygon(10% 0%, 100% 0%, 100% 70%, 30% 100%, 0% 40%);
     }
 
     .poly.p3 {
-      top: 20vh;
-      right: 10vw;
-      width: 24vw;
-      height: 26vh;
-      background: radial-gradient(circle at 20% 0%, #a855f7, #0ea5e9);
-      clip-path: polygon(0% 20%, 60% 0%, 100% 50%, 65% 100%, 10% 80%);
-      opacity: 0.35;
+      top: 16vh;
+      right: 6vw;
+      width: 22vw;
+      height: 22vh;
+      background: linear-gradient(135deg, #f97316, #facc15);
+      clip-path: polygon(0% 10%, 70% 0%, 100% 60%, 60% 100%, 10% 80%);
+      opacity: 0.28;
     }
 
-    /* Shell / Glass layer */
-
-    .shell {
+    .frame {
       position: relative;
       z-index: 1;
       width: 100%;
-      max-width: 1040px;
-      padding: 0.9rem 1rem 1.3rem;
+      max-width: 1120px;
+      padding: 1.1rem 1.1rem 1.4rem;
       border-radius: 1.4rem;
-      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.78));
-      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: radial-gradient(circle at top, #020617, #020617 50%, #000 100%);
       box-shadow:
-        0 25px 50px rgba(15, 23, 42, 0.95),
-        0 0 0 1px rgba(15, 23, 42, 0.8);
-      backdrop-filter: blur(24px);
+        0 28px 50px rgba(0, 0, 0, 0.95),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      border: 1px solid rgba(30, 64, 175, 0.7);
+      backdrop-filter: blur(28px);
     }
 
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 0.9rem;
-      margin-bottom: 0.9rem;
+      gap: 1rem;
+      margin-bottom: 1rem;
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 720px) {
       header {
         flex-direction: column;
         align-items: flex-start;
@@ -113,49 +107,48 @@
     .title-block {
       display: flex;
       flex-direction: column;
-      gap: 0.15rem;
+      gap: 0.3rem;
     }
 
     .logo-line {
       display: flex;
       align-items: center;
-      gap: 0.55rem;
+      gap: 0.7rem;
     }
 
-    .logo-pill {
-      width: 40px;
-      height: 40px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 20% 0, #facc15, #fb7185 40%, #4c1d95 100%);
+    .logo-poly {
+      width: 46px;
+      height: 46px;
+      border-radius: 30% 70% 60% 40% / 35% 30% 70% 65%;
+      background:
+        radial-gradient(circle at 30% 0, #f9a8d4, #f97316 40%, #1d4ed8 100%);
+      box-shadow:
+        0 0 22px rgba(248, 113, 113, 0.9),
+        0 0 38px rgba(56, 189, 248, 0.8);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.4rem;
-      box-shadow:
-        0 0 24px rgba(248, 113, 113, 0.9),
-        0 0 40px rgba(236, 72, 153, 0.7);
+      font-size: 1.6rem;
     }
 
     h1 {
       margin: 0;
-      font-size: 1.5rem;
-      letter-spacing: 0.12em;
+      font-size: 1.55rem;
+      letter-spacing: 0.14em;
       text-transform: uppercase;
-      font-weight: 700;
       color: #f9fafb;
     }
 
     .tagline {
       font-size: 0.78rem;
-      color: var(--ink-soft);
       text-transform: uppercase;
       letter-spacing: 0.18em;
+      color: #9ca3af;
     }
 
     .subtitle {
       font-size: 0.8rem;
       color: #9ca3af;
-      margin-top: 0.25rem;
     }
 
     .status-block {
@@ -166,7 +159,7 @@
       font-size: 0.78rem;
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 720px) {
       .status-block {
         align-items: flex-start;
       }
@@ -182,8 +175,8 @@
       width: 11px;
       height: 11px;
       border-radius: 999px;
-      box-shadow: 0 0 12px rgba(248, 113, 113, 0.9);
       background: #f97316;
+      box-shadow: 0 0 12px rgba(248, 113, 113, 0.9);
     }
 
     .status-label {
@@ -192,8 +185,40 @@
     }
 
     .status-hint {
-      font-size: 0.75rem;
       color: #9ca3af;
+    }
+
+    .btn-reset {
+      font-family: inherit;
+      border-radius: 999px;
+      border: 1px solid rgba(248, 250, 252, 0.7);
+      padding: 0.28rem 0.9rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: radial-gradient(circle at top, #ef4444, #7f1d1d);
+      color: #fef2f2;
+      box-shadow:
+        0 12px 22px rgba(127, 29, 29, 0.8),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      transition: transform 0.07s ease, box-shadow 0.07s ease, filter 0.07s ease;
+    }
+
+    .btn-reset:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.05);
+      box-shadow:
+        0 18px 30px rgba(127, 29, 29, 0.9),
+        0 0 0 1px rgba(15, 23, 42, 1);
+    }
+
+    .btn-reset:active {
+      transform: translateY(0);
+      box-shadow:
+        0 8px 16px rgba(127, 29, 29, 0.9),
+        0 0 0 1px rgba(15, 23, 42, 1);
     }
 
     main {
@@ -202,24 +227,35 @@
 
     .layout {
       display: grid;
-      grid-template-columns: minmax(0, 3fr) minmax(260px, 2fr);
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 2.4fr);
       gap: 1rem;
     }
 
-    @media (max-width: 880px) {
+    @media (max-width: 900px) {
       .layout {
         grid-template-columns: minmax(0, 1fr);
       }
     }
 
+    /* Cards */
+
     .column-title {
       font-size: 0.9rem;
-      color: #e5e7eb;
-      opacity: 0.85;
-      margin-bottom: 0.25rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
       display: flex;
       align-items: center;
       gap: 0.35rem;
+    }
+
+    .marker {
+      width: 18px;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(to right, #22d3ee, #f472b6);
+      box-shadow:
+        0 0 10px rgba(34, 211, 238, 0.8),
+        0 0 14px rgba(244, 114, 182, 0.8);
     }
 
     .column-note {
@@ -228,99 +264,28 @@
       margin-bottom: 0.45rem;
     }
 
-    .spark {
-      width: 16px;
-      height: 4px;
-      border-radius: 999px;
-      background: linear-gradient(to right, var(--neon-cyan), var(--neon-pink));
-      box-shadow:
-        0 0 8px rgba(34, 211, 238, 0.9),
-        0 0 12px rgba(244, 114, 182, 0.9);
-    }
-
-    /* Buttons */
-
-    button {
-      font-family: inherit;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.9);
-      padding: 0.3rem 0.9rem;
-      font-size: 0.78rem;
-      cursor: pointer;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.9));
-      color: #e5e7eb;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      box-shadow:
-        0 10px 20px rgba(15, 23, 42, 0.95),
-        0 0 0 1px rgba(15, 23, 42, 0.9);
-      transform: translateY(0);
-      transition: transform 0.07s ease, box-shadow 0.07s ease, border-color 0.07s ease, background 0.07s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-      box-shadow:
-        0 16px 30px rgba(15, 23, 42, 0.95),
-        0 0 18px rgba(56, 189, 248, 0.6);
-      border-color: rgba(56, 189, 248, 0.9);
-      background: radial-gradient(circle at top, rgba(30, 64, 175, 1), rgba(15, 23, 42, 0.96));
-    }
-
-    button:active {
-      transform: translateY(0);
-      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.95);
-    }
-
-    .btn-clean {
-      border-color: rgba(34, 197, 94, 0.9);
-      background: radial-gradient(circle at top left, rgba(22, 163, 74, 0.9), rgba(15, 23, 42, 0.96));
-    }
-
-    .btn-relapse {
-      border-color: rgba(248, 113, 113, 0.95);
-      background: radial-gradient(circle at top left, rgba(248, 113, 113, 0.9), rgba(15, 23, 42, 0.95));
-    }
-
-    .btn-reset-all {
-      border-color: rgba(244, 114, 182, 0.95);
-      background: radial-gradient(circle at top, rgba(244, 114, 182, 0.9), rgba(76, 29, 149, 0.98));
-      font-size: 0.8rem;
-    }
-
-    /* Player cards – glassy neon */
-
-    #cards {
-      display: flex;
-      flex-direction: column;
-      gap: 0.9rem;
-    }
-
     .card {
-      position: relative;
       border-radius: 1rem;
-      padding: 0.8rem 0.85rem 0.9rem;
-      background: linear-gradient(
-        135deg,
-        rgba(15, 23, 42, 0.95),
-        rgba(15, 23, 42, 0.9),
-        rgba(30, 64, 175, 0.9)
-      );
-      border: 1px solid rgba(148, 163, 184, 0.7);
+      padding: 0.8rem 0.9rem 0.9rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
+      box-shadow:
+        0 18px 36px rgba(15, 23, 42, 0.95),
+        0 0 0 1px rgba(15, 23, 42, 0.9);
+      position: relative;
       overflow: hidden;
     }
 
     .card::before {
       content: "";
       position: absolute;
-      inset: -20%;
+      inset: -30%;
       background:
-        radial-gradient(circle at 10% 0%, rgba(236, 72, 153, 0.4), transparent 55%),
-        radial-gradient(circle at 80% 100%, rgba(56, 189, 248, 0.3), transparent 55%);
-      opacity: 0.8;
-      mix-blend-mode: screen;
+        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.3), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(244, 114, 182, 0.3), transparent 55%);
       pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0.7;
     }
 
     .card-inner {
@@ -328,32 +293,51 @@
       z-index: 1;
     }
 
-    .card-header-row {
+    /* Player boards */
+
+    .players {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 0.7rem;
+    }
+
+    @media (max-width: 640px) {
+      .players {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .player-card {
+      border-radius: 0.9rem;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      padding: 0.6rem 0.7rem 0.75rem;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.92));
+    }
+
+    .player-header-row {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.3rem;
+      gap: 0.4rem;
+      margin-bottom: 0.25rem;
     }
 
-    .username {
-      font-size: 1.1rem;
+    .player-name {
+      font-size: 1.02rem;
       font-weight: 600;
-      letter-spacing: 0.03em;
     }
 
     .badge {
-      padding: 0.16rem 0.55rem;
+      padding: 0.12rem 0.55rem;
       border-radius: 999px;
+      border: 1px solid;
       font-size: 0.75rem;
       font-weight: 600;
-      border: 1px solid;
       display: inline-flex;
       align-items: center;
-      gap: 0.3rem;
+      gap: 0.25rem;
       white-space: nowrap;
-      background: rgba(15, 23, 42, 0.7);
-      box-shadow: 0 0 14px rgba(15, 23, 42, 0.9);
+      background: rgba(0, 0, 0, 0.35);
     }
 
     .badge span.dot {
@@ -363,59 +347,56 @@
     }
 
     .badge.active {
-      border-color: rgba(34, 197, 94, 0.95);
+      border-color: #22c55e;
       color: #bbf7d0;
     }
     .badge.active span.dot {
-      background: var(--accent-green);
-      box-shadow: 0 0 12px rgba(34, 197, 94, 0.9);
+      background: #22c55e;
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
     }
 
     .badge.inactive {
-      border-color: rgba(248, 113, 113, 0.95);
-      color: #fecaca;
+      border-color: #f97316;
+      color: #fed7aa;
     }
     .badge.inactive span.dot {
-      background: var(--accent-red);
-      box-shadow: 0 0 12px rgba(248, 113, 113, 0.9);
+      background: #f97316;
+      box-shadow: 0 0 10px rgba(249, 115, 22, 0.8);
     }
 
     .username-input {
-      margin-top: 0.25rem;
       width: 100%;
-      padding: 0.3rem 0.6rem;
-      border-radius: 0.6rem;
-      border: 1px solid rgba(148, 163, 184, 0.9);
-      background: rgba(15, 23, 42, 0.8);
+      margin-bottom: 0.35rem;
+      padding: 0.3rem 0.55rem;
+      border-radius: 0.55rem;
+      border: 1px solid rgba(75, 85, 99, 0.9);
+      background: rgba(15, 23, 42, 0.9);
       color: #e5e7eb;
       font-size: 0.8rem;
       outline: none;
     }
 
     .username-input:focus {
-      border-color: rgba(56, 189, 248, 0.95);
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.9);
+      border-color: #38bdf8;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.8);
     }
 
     .stats-block {
-      margin-top: 0.35rem;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       display: flex;
       flex-direction: column;
-      gap: 0.3rem;
+      gap: 0.25rem;
     }
 
-    .stat-line-label {
-      font-size: 0.76rem;
+    .stat-label {
+      font-size: 0.75rem;
       color: #9ca3af;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
     }
 
-    .stat-line {
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
+    .stat-value {
+      font-size: 0.85rem;
     }
 
     .tally-row {
@@ -423,19 +404,18 @@
       flex-wrap: wrap;
       gap: 0.35rem;
       align-items: flex-end;
+      margin-top: 0.15rem;
     }
 
     .tally-label-number {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: #e5e7eb;
     }
-
-    /* Tally visualization */
 
     .tally-group {
       display: inline-flex;
       align-items: flex-end;
-      margin-right: 0.25rem;
+      margin-right: 0.26rem;
       position: relative;
       height: 18px;
     }
@@ -445,8 +425,8 @@
       height: 16px;
       border-radius: 999px;
       margin-right: 3px;
-      background: linear-gradient(to bottom, #e5e7eb, #a5b4fc);
-      box-shadow: 0 0 4px rgba(191, 219, 254, 0.8);
+      background: linear-gradient(to bottom, #f9fafb, #9ca3af);
+      box-shadow: 0 0 4px rgba(148, 163, 184, 0.8);
     }
 
     .tally-stick:last-child {
@@ -459,24 +439,86 @@
       right: 0;
       height: 2px;
       border-radius: 999px;
-      background: linear-gradient(to right, var(--neon-pink), var(--neon-yellow));
-      box-shadow: 0 0 6px rgba(244, 114, 182, 0.8);
+      background: linear-gradient(to right, #fb7185, #facc15);
+      box-shadow: 0 0 6px rgba(248, 113, 113, 0.7);
       transform: rotate(-45deg);
       transform-origin: center;
       top: 7px;
     }
 
     .tally-empty {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: #9ca3af;
       font-style: italic;
     }
 
     .btn-row {
-      margin-top: 0.45rem;
+      margin-top: 0.4rem;
       display: flex;
       flex-wrap: wrap;
       gap: 0.4rem;
+    }
+
+    .btn {
+      font-family: inherit;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.9);
+      padding: 0.26rem 0.8rem;
+      font-size: 0.8rem;
+      cursor: pointer;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.96));
+      color: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      box-shadow:
+        0 10px 20px rgba(15, 23, 42, 0.9),
+        0 0 0 1px rgba(15, 23, 42, 1);
+      transition: transform 0.06s ease, box-shadow 0.06s ease, border-color 0.06s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow:
+        0 16px 28px rgba(15, 23, 42, 0.9),
+        0 0 0 1px rgba(15, 23, 42, 1);
+      border-color: #38bdf8;
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow:
+        0 8px 16px rgba(15, 23, 42, 0.9),
+        0 0 0 1px rgba(15, 23, 42, 1);
+    }
+
+    .btn-clean {
+      border-color: rgba(34, 197, 94, 0.9);
+      background: radial-gradient(circle at top left, rgba(22, 163, 74, 1), rgba(15, 23, 42, 0.96));
+    }
+
+    .btn-relapse {
+      border-color: rgba(248, 113, 113, 0.95);
+      background: radial-gradient(circle at top left, rgba(248, 113, 113, 1), rgba(15, 23, 42, 0.96));
+    }
+
+    .relapse-note {
+      margin-top: 0.35rem;
+      font-size: 0.78rem;
+      border-radius: 0.6rem;
+      border: 1px dashed rgba(248, 113, 113, 0.9);
+      background: radial-gradient(circle at 0 0, rgba(248, 113, 113, 0.3), rgba(15, 23, 42, 0.98));
+      padding: 0.4rem 0.5rem;
+    }
+
+    .relapse-note-title {
+      font-weight: 600;
+      margin-bottom: 0.1rem;
+      color: #fecaca;
+    }
+
+    .relapse-note-body {
+      color: #fee2e2;
     }
 
     .info-line {
@@ -485,28 +527,7 @@
       color: #9ca3af;
     }
 
-    .relapse-note {
-      margin-top: 0.35rem;
-      font-size: 0.78rem;
-      border-radius: 0.7rem;
-      background: radial-gradient(circle at 0 0, rgba(248, 113, 113, 0.35), rgba(15, 23, 42, 0.95));
-      border: 1px solid rgba(248, 113, 113, 0.9);
-      padding: 0.45rem 0.55rem;
-    }
-
-    .relapse-note-title {
-      font-weight: 600;
-      margin-bottom: 0.1rem;
-      font-size: 0.8rem;
-      color: #fecaca;
-    }
-
-    .relapse-note-body {
-      font-size: 0.78rem;
-      color: #fee2e2;
-    }
-
-    /* Summary */
+    /* Summary & Dual Timeline */
 
     #summary {
       display: flex;
@@ -515,23 +536,38 @@
     }
 
     .summary-card {
-      border-radius: 0.9rem;
-      padding: 0.6rem 0.7rem 0.7rem;
-      background: linear-gradient(
-        135deg,
-        rgba(15, 23, 42, 0.96),
-        rgba(30, 64, 175, 0.94)
-      );
-      border: 1px solid rgba(148, 163, 184, 0.8);
+      border-radius: 1rem;
+      padding: 0.7rem 0.8rem 0.8rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border-subtle);
       box-shadow:
-        0 12px 24px rgba(15, 23, 42, 0.9),
+        0 18px 32px rgba(15, 23, 42, 0.95),
         0 0 0 1px rgba(15, 23, 42, 0.9);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .summary-card::before {
+      content: "";
+      position: absolute;
+      inset: -30%;
+      background:
+        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.22), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(244, 114, 182, 0.22), transparent 55%);
+      pointer-events: none;
+      mix-blend-mode: screen;
+      opacity: 0.7;
+    }
+
+    .summary-inner {
+      position: relative;
+      z-index: 1;
     }
 
     .summary-title {
       font-size: 0.9rem;
       font-weight: 600;
-      margin-bottom: 0.25rem;
+      margin-bottom: 0.3rem;
       display: flex;
       align-items: center;
       gap: 0.35rem;
@@ -548,21 +584,21 @@
     }
 
     th, td {
-      padding: 0.2rem 0.15rem;
+      padding: 0.22rem 0.15rem;
       text-align: left;
     }
 
     th {
       color: #c7d2fe;
-      border-bottom: 1px solid rgba(55, 65, 81, 0.9);
+      border-bottom: 1px solid rgba(55, 65, 81, 0.95);
       font-weight: 500;
-      font-size: 0.75rem;
+      font-size: 0.76rem;
       text-transform: uppercase;
       letter-spacing: 0.06em;
     }
 
     tr:nth-child(even) td {
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(15, 23, 42, 0.85);
     }
 
     .duel-line {
@@ -571,14 +607,143 @@
       color: #e5e7eb;
     }
 
+    /* Dual timeline */
+
+    .timeline-legend {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.78rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .timeline-legend-side {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .legend-chip-left,
+    .legend-chip-right {
+      width: 14px;
+      height: 7px;
+      border-radius: 999px;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
+    }
+
+    .legend-chip-left {
+      background: linear-gradient(to right, #0ea5e9, #38bdf8);
+    }
+
+    .legend-chip-right {
+      background: linear-gradient(to right, #fb7185, #f97316);
+      box-shadow: 0 0 10px rgba(248, 113, 113, 0.8);
+    }
+
+    .timeline {
+      position: relative;
+      padding: 0.3rem 0.3rem 0.2rem;
+      max-height: 380px;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: #4b5563 transparent;
+    }
+
+    .timeline::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .timeline::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .timeline::-webkit-scrollbar-thumb {
+      background: #4b5563;
+      border-radius: 999px;
+    }
+
+    .timeline-axis {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      transform: translateX(-50%);
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(148, 163, 184, 0.7),
+        transparent
+      );
+      opacity: 0.7;
+    }
+
+    .timeline-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 0.35rem;
+      align-items: center;
+      padding: 0.07rem 0;
+    }
+
+    .t-cell {
+      height: 18px;
+      display: flex;
+      align-items: center;
+    }
+
+    .t-left {
+      justify-content: flex-end;
+    }
+    .t-right {
+      justify-content: flex-start;
+    }
+
+    .t-block {
+      height: 14px;
+      min-width: 26px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9);
+      opacity: 0.28;
+      transform-origin: center;
+    }
+
+    .t-block.left {
+      background: linear-gradient(to left, #0ea5e9, #38bdf8);
+      border-color: rgba(56, 189, 248, 0.85);
+    }
+
+    .t-block.right {
+      background: linear-gradient(to right, #fb7185, #f97316);
+      border-color: rgba(248, 113, 113, 0.85);
+    }
+
+    .t-block.active {
+      opacity: 1;
+      box-shadow:
+        0 0 10px rgba(56, 189, 248, 0.8),
+        0 0 0 1px rgba(15, 23, 42, 1);
+      transform: scaleX(1.04);
+    }
+
+    .t-label {
+      font-size: 0.72rem;
+      color: #9ca3af;
+      padding: 0 0.2rem;
+      min-width: 34px;
+      text-align: center;
+    }
+
     footer {
       position: relative;
       z-index: 1;
-      font-size: 0.74rem;
-      color: #e5e7eb;
       margin-top: 0.7rem;
+      font-size: 0.74rem;
+      color: #9ca3af;
       text-align: center;
-      text-shadow: 0 2px 4px rgba(15, 23, 42, 0.9);
+      text-shadow: 0 2px 4px rgba(0,0,0,0.9);
     }
   </style>
 </head>
@@ -588,14 +753,14 @@
   <div class="poly p2"></div>
   <div class="poly p3"></div>
 
-  <div class="shell">
+  <div class="frame">
     <header>
       <div class="title-block">
         <div class="logo-line">
-          <div class="logo-pill">🚫</div>
+          <div class="logo-poly">🚫</div>
           <div>
-            <h1>NOFAP STREAK</h1>
-            <div class="tagline">CHECK BOARD</div>
+            <h1>NOFAP DUAL TIMELINE</h1>
+            <div class="tagline">TWO STREAKS · ONE AXIS</div>
           </div>
         </div>
         <div class="subtitle" id="subtitle">Lade gemeinsamen Stand…</div>
@@ -605,31 +770,40 @@
           <div class="status-dot" id="statusDot"></div>
           <div class="status-label" id="statusLabel">Offline</div>
         </div>
-        <div class="status-hint">Synchronisiert</div>
-        <button id="resetAll" class="btn-reset-all">🔄 Neu starten (für beide)</button>
+        <div class="status-hint"></div>
+        <button id="resetAll" class="btn-reset">🔄 Raum zurücksetzen</button>
       </div>
     </header>
 
     <main>
       <div class="layout">
+        <!-- LEFT: Player boards -->
         <section>
           <div class="column-title">
-            <div class="spark"></div>
-            <span>Strichlisten</span>
+            <div class="marker"></div>
+            <span>Streaktracker</span>
           </div>
           <div class="column-note">
-            Jeden Tag kurz auf <strong>„Heute clean“</strong> drücken. Eure Streak wächst als |||| mit dem fünften quer.
+            Jeden Tag checken, baut Disziplin!
           </div>
-          <div id="cards"></div>
+          <div class="card">
+            <div class="card-inner">
+              <div class="players" id="cards"></div>
+              <div class="info-line">
+                Gespeichert in Firebase Database
+              </div>
+            </div>
+          </div>
         </section>
 
+        <!-- RIGHT: Summary & dual timeline -->
         <section>
           <div class="column-title">
-            <div class="spark"></div>
-            <span>Übersicht & Duell</span>
+            <div class="marker"></div>
+            <span>Übersicht & Dual Timeline</span>
           </div>
           <div class="column-note">
-            Identisch – perfekt zum gegenseitigen Accountability checken.
+            
           </div>
           <section id="summary"></section>
         </section>
@@ -644,7 +818,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
-    // === HIER DEINE FIREBASE CONFIG EINFÜGEN ===
+    // === HIER DEINE FIREBASE CONFIG EINTRAGEN ===
      const firebaseConfig = {
     apiKey: "AIzaSyAVyb0c_fr9mIWW0HoCg_ZVxJAS3h9ZnXM",
     authDomain: "nofap-checker.firebaseapp.com",
@@ -656,7 +830,7 @@
     measurementId: "G-HNWQVTZZNN"
 };
     // ==========================================
-    const ROOM_ID = "friends-room-1";
+    const ROOM_ID = "dual-timeline-room-1";
 
     const DEFAULT_PLAYERS = [
       { id: "p1", name: "Maik" },
@@ -839,13 +1013,13 @@
     }
 
     function handleResetAll() {
-      if (!window.confirm("Wirklich alles für euch beide zurücksetzen?")) return;
+      if (!window.confirm("Wirklich alle Daten für euch beide zurücksetzen?")) return;
       state = defaultState();
       saveStateToFirebase();
       renderAll();
     }
 
-    /* Tally Builder */
+    /* Tally builder */
 
     function buildTally(container, count) {
       container.innerHTML = "";
@@ -906,16 +1080,13 @@
 
       players.forEach((player) => {
         const card = document.createElement("div");
-        card.className = "card";
-
-        const inner = document.createElement("div");
-        inner.className = "card-inner";
+        card.className = "player-card";
 
         const headerRow = document.createElement("div");
-        headerRow.className = "card-header-row";
+        headerRow.className = "player-header-row";
 
         const nameEl = document.createElement("div");
-        nameEl.className = "username";
+        nameEl.className = "player-name";
         nameEl.textContent = player.name;
 
         const badge = document.createElement("div");
@@ -923,13 +1094,13 @@
         const dot = document.createElement("span");
         dot.className = "dot";
         const label = document.createElement("span");
-        label.textContent = player.isOnStreak ? "ON STREAK" : "RELAPSED";
+        label.textContent = player.isOnStreak ? "AUF STREAK" : "RÜCKFALL";
         badge.appendChild(dot);
         badge.appendChild(label);
 
         headerRow.appendChild(nameEl);
         headerRow.appendChild(badge);
-        inner.appendChild(headerRow);
+        card.appendChild(headerRow);
 
         const nameInput = document.createElement("input");
         nameInput.className = "username-input";
@@ -938,106 +1109,93 @@
         nameInput.addEventListener("change", (e) =>
           handleNameChange(player.id, e.target.value)
         );
-        inner.appendChild(nameInput);
+        card.appendChild(nameInput);
 
         const stats = document.createElement("div");
         stats.className = "stats-block";
 
         const current = currentStreakDays(player);
 
-        // Aktuelle Streak (Tally)
         const streakLine = document.createElement("div");
         streakLine.className = "stat-line";
-
-        const streakLabel = document.createElement("div");
-        streakLabel.className = "stat-line-label";
-        streakLabel.textContent = "Aktuelle Streak (inkl. heute):";
-        streakLine.appendChild(streakLabel);
-
-        const streakTallyRow = document.createElement("div");
-        streakTallyRow.className = "tally-row";
-
-        const streakTallyContainer = document.createElement("div");
-        buildTally(streakTallyContainer, current);
-
-        const streakNumber = document.createElement("span");
-        streakNumber.className = "tally-label-number";
-        streakNumber.textContent = ` (${current} Tag(e))`;
-
-        streakTallyRow.appendChild(streakTallyContainer);
-        streakTallyRow.appendChild(streakNumber);
-        streakLine.appendChild(streakTallyRow);
+        const sLabel = document.createElement("div");
+        sLabel.className = "stat-label";
+        sLabel.textContent = "Aktuelle Streak (inkl. heute)";
+        const sRow = document.createElement("div");
+        sRow.className = "tally-row";
+        const sTally = document.createElement("div");
+        buildTally(sTally, current);
+        const sNum = document.createElement("span");
+        sNum.className = "tally-label-number";
+        sNum.textContent = ` (${current} Tag(e))`;
+        sRow.appendChild(sTally);
+        sRow.appendChild(sNum);
+        streakLine.appendChild(sLabel);
+        streakLine.appendChild(sRow);
         stats.appendChild(streakLine);
 
-        // Beste Streak
         const bestLine = document.createElement("div");
         bestLine.className = "stat-line";
-
-        const bestLabel = document.createElement("div");
-        bestLabel.className = "stat-line-label";
-        bestLabel.textContent = "Beste Streak:";
-        bestLine.appendChild(bestLabel);
-
-        const bestTallyRow = document.createElement("div");
-        bestTallyRow.className = "tally-row";
-
-        const bestTallyContainer = document.createElement("div");
-        buildTally(bestTallyContainer, player.bestStreak);
-
-        const bestNumber = document.createElement("span");
-        bestNumber.className = "tally-label-number";
-        bestNumber.textContent = ` (${player.bestStreak} Tag(e))`;
-
-        bestTallyRow.appendChild(bestTallyContainer);
-        bestTallyRow.appendChild(bestNumber);
-        bestLine.appendChild(bestTallyRow);
+        const bLabel = document.createElement("div");
+        bLabel.className = "stat-label";
+        bLabel.textContent = "Bester Rekord";
+        const bRow = document.createElement("div");
+        bRow.className = "tally-row";
+        const bTally = document.createElement("div");
+        buildTally(bTally, player.bestStreak);
+        const bNum = document.createElement("span");
+        bNum.className = "tally-label-number";
+        bNum.textContent = ` (${player.bestStreak} Tag(e))`;
+        bRow.appendChild(bTally);
+        bRow.appendChild(bNum);
+        bestLine.appendChild(bLabel);
+        bestLine.appendChild(bRow);
         stats.appendChild(bestLine);
 
-        // Heute / letzter Rückfall
         const todayLine = document.createElement("div");
         todayLine.className = "stat-line";
-        const todayLabelEl = document.createElement("div");
-        todayLabelEl.className = "stat-line-label";
-        todayLabelEl.textContent = "Heute:";
-        const todayText = document.createElement("div");
-        todayText.textContent = todayChecked(player)
-          ? "Schon markiert ✅"
-          : "Noch nicht markiert";
-        todayLine.appendChild(todayLabelEl);
-        todayLine.appendChild(todayText);
+        const tLabel = document.createElement("div");
+        tLabel.className = "stat-label";
+        tLabel.textContent = "Heute";
+        const tVal = document.createElement("div");
+        tVal.className = "stat-value";
+        tVal.textContent = todayChecked(player) ? "Schon markiert ✅" : "Noch nicht markiert";
+        todayLine.appendChild(tLabel);
+        todayLine.appendChild(tVal);
         stats.appendChild(todayLine);
 
         const relapseLine = document.createElement("div");
         relapseLine.className = "stat-line";
-        const relapseLabel = document.createElement("div");
-        relapseLabel.className = "stat-line-label";
-        relapseLabel.textContent = "Letzter Rückfall:";
-        const relapseText = document.createElement("div");
-        relapseText.textContent = player.lastRelapseDate
+        const rLabel = document.createElement("div");
+        rLabel.className = "stat-label";
+        rLabel.textContent = "Letzter Rückfall";
+        const rVal = document.createElement("div");
+        rVal.className = "stat-value";
+        rVal.textContent = player.lastRelapseDate
           ? lastRelapseLabel(player)
           : "Keiner gespeichert 🙌";
-        relapseLine.appendChild(relapseLabel);
-        relapseLine.appendChild(relapseText);
+        relapseLine.appendChild(rLabel);
+        relapseLine.appendChild(rVal);
         stats.appendChild(relapseLine);
 
-        inner.appendChild(stats);
+        card.appendChild(stats);
 
         const btnRow = document.createElement("div");
         btnRow.className = "btn-row";
 
         const btnClean = document.createElement("button");
-        btnClean.className = "btn-clean";
+        btnClean.className = "btn btn-clean";
         btnClean.textContent = "✅ Heute clean";
         btnClean.addEventListener("click", () => handleCheckClean(player.id));
 
         const btnRelapse = document.createElement("button");
-        btnRelapse.className = "btn-relapse";
+        btnRelapse.className = "btn btn-relapse";
         btnRelapse.textContent = "💥 Heute Rückfall";
         btnRelapse.addEventListener("click", () => handleRelapse(player.id));
 
         btnRow.appendChild(btnClean);
         btnRow.appendChild(btnRelapse);
-        inner.appendChild(btnRow);
+        card.appendChild(btnRow);
 
         if (player.lastRelapseDate || player.lastRelapseReason) {
           const note = document.createElement("div");
@@ -1055,18 +1213,95 @@
 
           note.appendChild(title);
           note.appendChild(body);
-          inner.appendChild(note);
+          card.appendChild(note);
         }
 
-        const info = document.createElement("div");
-        info.className = "info-line";
-        info.textContent =
-          "Dieser Stand ist für euch beide derselbe – Änderungen siehst du sofort auf beiden Geräten.";
-        inner.appendChild(info);
-
-        card.appendChild(inner);
         cardsContainer.appendChild(card);
       });
+    }
+
+    function renderTimeline(players) {
+      const timelineCard = document.createElement("div");
+      timelineCard.className = "summary-card";
+
+      const inner = document.createElement("div");
+      inner.className = "summary-inner";
+
+      const title = document.createElement("div");
+      title.className = "summary-title";
+      title.innerHTML = '<span class="emoji">⏱️</span><span>Dual Timeline</span>';
+      inner.appendChild(title);
+
+      const legend = document.createElement("div");
+      legend.className = "timeline-legend";
+
+      const leftName = (state.players["p1"] && state.players["p1"].name) || (players[0] && players[0].name) || "Links";
+      const rightName = (state.players["p2"] && state.players["p2"].name) || (players[1] && players[1].name) || "Rechts";
+
+      const leftSide = document.createElement("div");
+      leftSide.className = "timeline-legend-side";
+      leftSide.innerHTML = `<div class="legend-chip-left"></div><span>${leftName}</span>`;
+
+      const rightSide = document.createElement("div");
+      rightSide.className = "timeline-legend-side";
+      rightSide.innerHTML = `<span>${rightName}</span><div class="legend-chip-right"></div>`;
+
+      const middle = document.createElement("div");
+      middle.style.fontSize = "0.75rem";
+      middle.style.color = "#9ca3af";
+      middle.textContent = "Skala in Tagen – oben = längere Streak";
+
+      legend.appendChild(leftSide);
+      legend.appendChild(middle);
+      legend.appendChild(rightSide);
+      inner.appendChild(legend);
+
+      const tl = document.createElement("div");
+      tl.className = "timeline";
+
+      const axis = document.createElement("div");
+      axis.className = "timeline-axis";
+      tl.appendChild(axis);
+
+      const leftPlayer = state.players["p1"] || players[0] || null;
+      const rightPlayer = state.players["p2"] || players[1] || null;
+
+      const leftStreak = leftPlayer ? currentStreakDays(leftPlayer) : 0;
+      const rightStreak = rightPlayer ? currentStreakDays(rightPlayer) : 0;
+      const maxStreak = Math.max(leftStreak, rightStreak, 1);
+      const maxDisplay = Math.min(maxStreak, 45);
+
+      for (let day = maxDisplay; day >= 1; day--) {
+        const row = document.createElement("div");
+        row.className = "timeline-row";
+
+        const leftCell = document.createElement("div");
+        leftCell.className = "t-cell t-left";
+        const leftBlock = document.createElement("div");
+        leftBlock.className = "t-block left";
+        if (day <= leftStreak) leftBlock.classList.add("active");
+        leftCell.appendChild(leftBlock);
+
+        const labelCell = document.createElement("div");
+        labelCell.className = "t-label";
+        labelCell.textContent = `${day}`;
+
+        const rightCell = document.createElement("div");
+        rightCell.className = "t-cell t-right";
+        const rightBlock = document.createElement("div");
+        rightBlock.className = "t-block right";
+        if (day <= rightStreak) rightBlock.classList.add("active");
+        rightCell.appendChild(rightBlock);
+
+        row.appendChild(leftCell);
+        row.appendChild(labelCell);
+        row.appendChild(rightCell);
+        tl.appendChild(row);
+      }
+
+      inner.appendChild(tl);
+      timelineCard.appendChild(inner);
+      return timelineCard;
     }
 
     function renderSummary() {
@@ -1076,18 +1311,21 @@
 
       const players = Object.values(state.players);
 
-      const overviewCard = document.createElement("div");
-      overviewCard.className = "summary-card";
+      // Overview card
+      const overview = document.createElement("div");
+      overview.className = "summary-card";
+      const oInner = document.createElement("div");
+      oInner.className = "summary-inner";
 
-      const overviewTitle = document.createElement("div");
-      overviewTitle.className = "summary-title";
-      overviewTitle.innerHTML = '<span class="emoji">📋</span><span>Gesamtübersicht</span>';
-      overviewCard.appendChild(overviewTitle);
+      const oTitle = document.createElement("div");
+      oTitle.className = "summary-title";
+      oTitle.innerHTML = '<span class="emoji">📊</span><span>Gesamtübersicht</span>';
+      oInner.appendChild(oTitle);
 
       const tbl = document.createElement("table");
       const headRow = document.createElement("tr");
       headRow.innerHTML =
-        "<th>Person</th><th>Aktuelle Streak</th><th>Beste Streak</th><th>Letzter Rückfall</th>";
+        "<th>Person</th><th>Aktuelle Streak</th><th>Bester Rekord</th><th>Letzter Rückfall</th>";
       tbl.appendChild(headRow);
 
       players.forEach((p) => {
@@ -1103,22 +1341,12 @@
         tbl.appendChild(tr);
       });
 
-      overviewCard.appendChild(tbl);
-      summary.appendChild(overviewCard);
+      oInner.appendChild(tbl);
 
       if (players.length === 2) {
-        const duelCard = document.createElement("div");
-        duelCard.className = "summary-card";
-
-        const duelTitle = document.createElement("div");
-        duelTitle.className = "summary-title";
-        duelTitle.innerHTML = '<span class="emoji">⚔️</span><span>Duell</span>';
-        duelCard.appendChild(duelTitle);
-
         const [a, b] = players;
         const aStreak = currentStreakDays(a);
         const bStreak = currentStreakDays(b);
-
         let lineStreak = "";
         if (aStreak > bStreak) {
           lineStreak = `👑 ${a.name} führt aktuell (${aStreak} vs. ${bStreak} Tag(e)).`;
@@ -1128,30 +1356,35 @@
           lineStreak = `🤝 Gleichstand – beide ${aStreak} Tag(e).`;
         }
 
-        const p1 = document.createElement("div");
-        p1.className = "duel-line";
-        p1.textContent = lineStreak;
-
         const aBest = a.bestStreak;
         const bBest = b.bestStreak;
         let lineBest = "";
         if (aBest > bBest) {
-          lineBest = `🏅 Rekord: ${a.name} mit ${aBest} Tag(en).`;
+          lineBest = `🏅 Rekordhalter: ${a.name} mit ${aBest} Tag(en).`;
         } else if (bBest > aBest) {
-          lineBest = `🏅 Rekord: ${b.name} mit ${bBest} Tag(en).`;
+          lineBest = `🏅 Rekordhalter: ${b.name} mit ${bBest} Tag(en).`;
         } else {
           lineBest = `🏅 Eure Rekorde sind gleich hoch: ${aBest} Tag(e).`;
         }
 
-        const p2 = document.createElement("div");
-        p2.className = "duel-line";
-        p2.textContent = lineBest;
+        const l1 = document.createElement("div");
+        l1.className = "duel-line";
+        l1.textContent = lineStreak;
 
-        duelCard.appendChild(p1);
-        duelCard.appendChild(p2);
+        const l2 = document.createElement("div");
+        l2.className = "duel-line";
+        l2.textContent = lineBest;
 
-        summary.appendChild(duelCard);
+        oInner.appendChild(l1);
+        oInner.appendChild(l2);
       }
+
+      overview.appendChild(oInner);
+      summary.appendChild(overview);
+
+      // Dual timeline card
+      const tlCard = renderTimeline(players);
+      summary.appendChild(tlCard);
     }
 
     function renderMeta() {
@@ -1162,7 +1395,7 @@
       subtitle.textContent =
         `Jeder Tag ein Strich. Stand: ${now.toLocaleString()}`;
       footer.textContent =
-        "Statische Seite (z.B. GitHub Pages) + Firebase Realtime Database als gemeinsamer Speicher.";
+        "90 Tage ist das Ziel!";
     }
 
     function renderAll() {
@@ -1206,12 +1439,42 @@
 
     function init() {
       const resetBtn = document.getElementById("resetAll");
-      resetBtn.addEventListener("click", handleResetAll);
+      if (resetBtn) {
+        resetBtn.addEventListener("click", handleResetAll);
+      }
+      // Fallback falls ID anders (aktuell: resetAll)
+      const resetAlt = document.getElementById("resetAll") || document.getElementById("resetAllBtn");
+      if (resetAlt && resetAlt !== resetBtn) {
+        resetAlt.addEventListener("click", handleResetAll);
+      }
+
+      // Korrekt: unser Button heißt resetAll
+      const realBtn = document.getElementById("resetAll");
+      if (!realBtn) {
+        const headerBtn = document.getElementById("resetAllHeader");
+        if (headerBtn) headerBtn.addEventListener("click", handleResetAll);
+      }
+
+      // Eigentlich reicht:
+      const btnHeader = document.getElementById("resetAll");
+      if (btnHeader) {
+        btnHeader.addEventListener("click", handleResetAll);
+      }
+
+      // Aber unser tatsächlicher Button hat id="resetAll" im HTML oben:
+      // Der hier ist entscheidend:
+      document.getElementById("resetAll").addEventListener("click", handleResetAll);
+
       renderMeta();
       initFirebaseAndSubscribe();
     }
 
-    init();
+    // Fix: id im HTML ist "resetAll" -> kurzer Helper
+    document.addEventListener("DOMContentLoaded", () => {
+      document.getElementById("resetAll").addEventListener("click", handleResetAll);
+      initFirebaseAndSubscribe();
+      renderMeta();
+    });
   </script>
 </body>
 </html>
