@@ -595,7 +595,7 @@
           <div class="logo-pill">🚫</div>
           <div>
             <h1>NOFAP STREAK</h1>
-            <div class="tagline">MELLOW VAPORWAVE TALLY BOARD</div>
+            <div class="tagline">CHECK BOARD</div>
           </div>
         </div>
         <div class="subtitle" id="subtitle">Lade gemeinsamen Stand…</div>
@@ -605,8 +605,8 @@
           <div class="status-dot" id="statusDot"></div>
           <div class="status-label" id="statusLabel">Offline</div>
         </div>
-        <div class="status-hint">Beide sehen denselben Stand – Firebase Sync</div>
-        <button id="resetAll" class="btn-reset-all">🔄 Neu starten (für euch beide)</button>
+        <div class="status-hint">Synchronisiert</div>
+        <button id="resetAll" class="btn-reset-all">🔄 Neu starten (für beide)</button>
       </div>
     </header>
 
@@ -629,7 +629,7 @@
             <span>Übersicht & Duell</span>
           </div>
           <div class="column-note">
-            Für euch beide identisch – perfekt zum gegenseitigen Accountability checken.
+            Identisch – perfekt zum gegenseitigen Accountability checken.
           </div>
           <section id="summary"></section>
         </section>
@@ -659,8 +659,8 @@
     const ROOM_ID = "friends-room-1";
 
     const DEFAULT_PLAYERS = [
-      { id: "p1", name: "Du" },
-      { id: "p2", name: "Freund" }
+      { id: "p1", name: "Maik" },
+      { id: "p2", name: "Marvin" }
     ];
 
     let db = null;
