@@ -2,19 +2,23 @@
 <html lang="de">
 <head>
   <meta charset="UTF-8" />
-  <title>NoFap Streak – Dual Timeline Dojo</title>
+  <title>NoFap Streak – Buddy Tracker</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
       color-scheme: dark;
-      --bg-main: radial-gradient(circle at top, #0f172a 0, #020617 45%, #000 100%);
-      --accent-left: #38bdf8;
-      --accent-right: #fb7185;
-      --accent-axis: #e5e7eb;
-      --accent-soft: #9ca3af;
-      --card-bg: rgba(15, 23, 42, 0.96);
-      --border-subtle: rgba(148, 163, 184, 0.8);
+      --bg: #020617;
+      --bg-card: #020617;
+      --bg-elevated: #020617;
+      --border-subtle: rgba(148, 163, 184, 0.35);
+      --accent-1: #38bdf8;
+      --accent-2: #22c55e;
+      --accent-3: #f97316;
+      --text-main: #e5e7eb;
+      --text-soft: #9ca3af;
+      --danger: #ef4444;
       --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --radius-lg: 18px;
     }
 
     * {
@@ -24,77 +28,32 @@
     body {
       margin: 0;
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      padding: 1.4rem 0.9rem 2rem;
-      background: var(--bg-main);
+      background:
+        radial-gradient(circle at top, #0f172a 0, #020617 45%, #020617 100%);
       font-family: var(--font-main);
-      color: #e5e7eb;
-      overflow-x: hidden;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1rem;
     }
 
-    /* Low-poly style background wedges */
-
-    .poly {
-      position: fixed;
-      pointer-events: none;
-      opacity: 0.35;
-      filter: blur(0.2px);
-      mix-blend-mode: screen;
-      z-index: 0;
-    }
-
-    .poly.p1 {
-      top: -12vh;
-      left: -18vw;
-      width: 42vw;
-      height: 42vh;
-      background: linear-gradient(135deg, #0f766e, #22d3ee);
-      clip-path: polygon(0% 0%, 80% 0%, 100% 50%, 20% 100%, 0% 60%);
-    }
-
-    .poly.p2 {
-      bottom: -20vh;
-      right: -16vw;
-      width: 46vw;
-      height: 50vh;
-      background: linear-gradient(135deg, #a855f7, #ec4899);
-      clip-path: polygon(10% 0%, 100% 0%, 100% 70%, 30% 100%, 0% 40%);
-    }
-
-    .poly.p3 {
-      top: 16vh;
-      right: 6vw;
-      width: 22vw;
-      height: 22vh;
-      background: linear-gradient(135deg, #f97316, #facc15);
-      clip-path: polygon(0% 10%, 70% 0%, 100% 60%, 60% 100%, 10% 80%);
-      opacity: 0.28;
-    }
-
-    .frame {
-      position: relative;
-      z-index: 1;
+    .app {
       width: 100%;
-      max-width: 1120px;
-      padding: 1.1rem 1.1rem 1.4rem;
-      border-radius: 1.4rem;
-      background: radial-gradient(circle at top, #020617, #020617 50%, #000 100%);
-      box-shadow:
-        0 28px 50px rgba(0, 0, 0, 0.95),
-        0 0 0 1px rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(30, 64, 175, 0.7);
-      backdrop-filter: blur(28px);
+      max-width: 960px;
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: 20px;
+      border: 1px solid rgba(30, 64, 175, 0.35);
+      box-shadow: 0 24px 50px rgba(0, 0, 0, 0.8);
+      padding: 1.2rem 1.1rem 1.4rem;
     }
 
     header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
       gap: 1rem;
       margin-bottom: 1rem;
+      align-items: center;
     }
 
     @media (max-width: 720px) {
@@ -104,58 +63,47 @@
       }
     }
 
-    .title-block {
+    .logo-wrap {
       display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-
-    .logo-line {
-      display: flex;
+      gap: 0.8rem;
       align-items: center;
-      gap: 0.7rem;
     }
 
-    .logo-poly {
-      width: 46px;
-      height: 46px;
-      border-radius: 30% 70% 60% 40% / 35% 30% 70% 65%;
-      background:
-        radial-gradient(circle at 30% 0, #f9a8d4, #f97316 40%, #1d4ed8 100%);
-      box-shadow:
-        0 0 22px rgba(248, 113, 113, 0.9),
-        0 0 38px rgba(56, 189, 248, 0.8);
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 0, #22c55e, #0ea5e9 45%, #1d4ed8 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
     }
 
-    h1 {
+    .title-text h1 {
       margin: 0;
-      font-size: 1.55rem;
-      letter-spacing: 0.14em;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: #f9fafb;
     }
 
-    .tagline {
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: #9ca3af;
+    .title-text .tagline {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+      margin-top: 0.15rem;
     }
 
     .subtitle {
       font-size: 0.8rem;
-      color: #9ca3af;
+      color: var(--text-soft);
+      margin-top: 0.25rem;
     }
 
     .status-block {
       display: flex;
       flex-direction: column;
-      align-items: flex-end;
       gap: 0.35rem;
+      align-items: flex-end;
       font-size: 0.78rem;
     }
 
@@ -166,675 +114,471 @@
     }
 
     .status-row {
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 0.4rem;
     }
 
     .status-dot {
-      width: 11px;
-      height: 11px;
+      width: 10px;
+      height: 10px;
       border-radius: 999px;
-      background: #f97316;
-      box-shadow: 0 0 12px rgba(248, 113, 113, 0.9);
-    }
-
-    .status-label {
-      font-weight: 500;
-      color: #e5e7eb;
-    }
-
-    .status-hint {
-      color: #9ca3af;
+      background: var(--danger);
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.9);
     }
 
     .btn-reset {
       font-family: inherit;
+      font-size: 0.78rem;
+      padding: 0.3rem 0.8rem;
       border-radius: 999px;
-      border: 1px solid rgba(248, 250, 252, 0.7);
-      padding: 0.28rem 0.9rem;
-      font-size: 0.8rem;
-      cursor: pointer;
+      border: 1px solid rgba(248, 250, 252, 0.6);
       background: radial-gradient(circle at top, #ef4444, #7f1d1d);
       color: #fef2f2;
-      box-shadow:
-        0 12px 22px rgba(127, 29, 29, 0.8),
-        0 0 0 1px rgba(15, 23, 42, 0.9);
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.3rem;
+      box-shadow: 0 10px 18px rgba(127, 29, 29, 0.7);
       transition: transform 0.07s ease, box-shadow 0.07s ease, filter 0.07s ease;
     }
 
     .btn-reset:hover {
       transform: translateY(-1px);
       filter: brightness(1.05);
-      box-shadow:
-        0 18px 30px rgba(127, 29, 29, 0.9),
-        0 0 0 1px rgba(15, 23, 42, 1);
+      box-shadow: 0 16px 26px rgba(127, 29, 29, 0.8);
     }
 
     .btn-reset:active {
       transform: translateY(0);
-      box-shadow:
-        0 8px 16px rgba(127, 29, 29, 0.9),
-        0 0 0 1px rgba(15, 23, 42, 1);
+      box-shadow: 0 8px 16px rgba(127, 29, 29, 0.8);
     }
 
-    main {
-      margin-top: 0.3rem;
-    }
+    /* Summary row */
 
-    .layout {
+    .summary-row {
       display: grid;
-      grid-template-columns: minmax(0, 2.2fr) minmax(0, 2.4fr);
-      gap: 1rem;
+      grid-template-columns: minmax(0, 2.2fr) minmax(0, 1.8fr);
+      gap: 0.9rem;
+      margin-bottom: 1rem;
     }
 
     @media (max-width: 900px) {
-      .layout {
+      .summary-row {
         grid-template-columns: minmax(0, 1fr);
       }
     }
 
-    /* Cards */
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      padding: 0.8rem 0.9rem;
+      box-shadow: 0 18px 32px rgba(15, 23, 42, 0.9);
+    }
 
-    .column-title {
-      font-size: 0.9rem;
+    .card-title {
+      font-size: 0.88rem;
       font-weight: 600;
-      margin-bottom: 0.2rem;
+      margin-bottom: 0.55rem;
       display: flex;
       align-items: center;
       gap: 0.35rem;
     }
 
-    .marker {
-      width: 18px;
-      height: 4px;
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
       border-radius: 999px;
-      background: linear-gradient(to right, #22d3ee, #f472b6);
-      box-shadow:
-        0 0 10px rgba(34, 211, 238, 0.8),
-        0 0 14px rgba(244, 114, 182, 0.8);
+      font-size: 0.75rem;
+      padding: 0.12rem 0.5rem;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      color: var(--text-soft);
     }
 
-    .column-note {
-      font-size: 0.78rem;
-      color: #9ca3af;
-      margin-bottom: 0.45rem;
+    .overall-stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.6rem;
     }
 
-    .card {
-      border-radius: 1rem;
-      padding: 0.8rem 0.9rem 0.9rem;
-      background: var(--card-bg);
-      border: 1px solid var(--border-subtle);
-      box-shadow:
-        0 18px 36px rgba(15, 23, 42, 0.95),
-        0 0 0 1px rgba(15, 23, 42, 0.9);
-      position: relative;
+    .overall-item {
+      font-size: 0.82rem;
+    }
+
+    .overall-label {
+      font-size: 0.76rem;
+      color: var(--text-soft);
+      margin-bottom: 0.1rem;
+    }
+
+    .overall-value {
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .highlight {
+      color: var(--accent-2);
+    }
+
+    .progress-bar {
+      margin-top: 0.3rem;
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(31, 41, 55, 0.95);
       overflow: hidden;
     }
 
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: -30%;
-      background:
-        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.3), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(244, 114, 182, 0.3), transparent 55%);
-      pointer-events: none;
-      mix-blend-mode: screen;
-      opacity: 0.7;
+    .progress-inner {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(to right, var(--accent-1), var(--accent-2));
+      width: 0%;
+      transition: width 0.25s ease-out;
     }
 
-    .card-inner {
-      position: relative;
-      z-index: 1;
+    .summary-note {
+      margin-top: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--text-soft);
     }
 
-    /* Player boards */
+    /* Player cards */
 
-    .players {
+    .players-grid {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      gap: 0.7rem;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.9rem;
     }
 
-    @media (max-width: 640px) {
-      .players {
+    @media (max-width: 720px) {
+      .players-grid {
         grid-template-columns: minmax(0, 1fr);
       }
     }
 
     .player-card {
-      border-radius: 0.9rem;
-      border: 1px solid rgba(55, 65, 81, 0.9);
-      padding: 0.6rem 0.7rem 0.75rem;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.92));
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-subtle);
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.95));
+      padding: 0.8rem 0.9rem 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
     }
 
-    .player-header-row {
+    .player-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 0.4rem;
-      margin-bottom: 0.25rem;
+      gap: 0.5rem;
     }
 
     .player-name {
-      font-size: 1.02rem;
+      font-size: 1rem;
       font-weight: 600;
     }
 
-    .badge {
-      padding: 0.12rem 0.55rem;
-      border-radius: 999px;
-      border: 1px solid;
-      font-size: 0.75rem;
-      font-weight: 600;
+    .streak-chip {
       display: inline-flex;
       align-items: center;
       gap: 0.25rem;
-      white-space: nowrap;
-      background: rgba(0, 0, 0, 0.35);
+      border-radius: 999px;
+      padding: 0.18rem 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border: 1px solid;
     }
 
-    .badge span.dot {
+    .streak-chip .dot {
       width: 7px;
       height: 7px;
       border-radius: 999px;
     }
 
-    .badge.active {
-      border-color: #22c55e;
+    .streak-chip.on {
+      border-color: var(--accent-2);
       color: #bbf7d0;
-    }
-    .badge.active span.dot {
-      background: #22c55e;
-      box-shadow: 0 0 10px rgba(34, 197, 94, 0.8);
+      background: rgba(22, 163, 74, 0.15);
     }
 
-    .badge.inactive {
-      border-color: #f97316;
+    .streak-chip.on .dot {
+      background: var(--accent-2);
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.9);
+    }
+
+    .streak-chip.off {
+      border-color: var(--accent-3);
       color: #fed7aa;
-    }
-    .badge.inactive span.dot {
-      background: #f97316;
-      box-shadow: 0 0 10px rgba(249, 115, 22, 0.8);
+      background: rgba(249, 115, 22, 0.12);
     }
 
-    .username-input {
+    .streak-chip.off .dot {
+      background: var(--accent-3);
+      box-shadow: 0 0 8px rgba(249, 115, 22, 0.9);
+    }
+
+    .name-input {
       width: 100%;
-      margin-bottom: 0.35rem;
+      margin-top: 0.15rem;
+      font-size: 0.8rem;
       padding: 0.3rem 0.55rem;
       border-radius: 0.55rem;
       border: 1px solid rgba(75, 85, 99, 0.9);
-      background: rgba(15, 23, 42, 0.9);
-      color: #e5e7eb;
-      font-size: 0.8rem;
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--text-main);
       outline: none;
     }
 
-    .username-input:focus {
-      border-color: #38bdf8;
-      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.8);
+    .name-input:focus {
+      border-color: var(--accent-1);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.6);
     }
 
-    .stats-block {
-      font-size: 0.8rem;
+    .stat-row {
       display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
+      justify-content: space-between;
+      align-items: baseline;
+      font-size: 0.8rem;
+      margin-top: 0.18rem;
     }
 
     .stat-label {
-      font-size: 0.75rem;
-      color: #9ca3af;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
+      color: var(--text-soft);
+      font-size: 0.78rem;
     }
 
     .stat-value {
-      font-size: 0.85rem;
+      font-weight: 500;
+      font-size: 0.84rem;
     }
 
-    .tally-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.35rem;
-      align-items: flex-end;
-      margin-top: 0.15rem;
-    }
-
-    .tally-label-number {
+    .today-status {
       font-size: 0.78rem;
-      color: #e5e7eb;
-    }
-
-    .tally-group {
-      display: inline-flex;
-      align-items: flex-end;
-      margin-right: 0.26rem;
-      position: relative;
-      height: 18px;
-    }
-
-    .tally-stick {
-      width: 2px;
-      height: 16px;
-      border-radius: 999px;
-      margin-right: 3px;
-      background: linear-gradient(to bottom, #f9fafb, #9ca3af);
-      box-shadow: 0 0 4px rgba(148, 163, 184, 0.8);
-    }
-
-    .tally-stick:last-child {
-      margin-right: 0;
-    }
-
-    .tally-diagonal {
-      position: absolute;
-      left: 0;
-      right: 0;
-      height: 2px;
-      border-radius: 999px;
-      background: linear-gradient(to right, #fb7185, #facc15);
-      box-shadow: 0 0 6px rgba(248, 113, 113, 0.7);
-      transform: rotate(-45deg);
-      transform-origin: center;
-      top: 7px;
-    }
-
-    .tally-empty {
-      font-size: 0.78rem;
-      color: #9ca3af;
-      font-style: italic;
+      color: var(--text-soft);
+      margin-top: 0.1rem;
     }
 
     .btn-row {
-      margin-top: 0.4rem;
       display: flex;
       flex-wrap: wrap;
       gap: 0.4rem;
+      margin-top: 0.5rem;
     }
 
     .btn {
       font-family: inherit;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.8rem;
       border-radius: 999px;
       border: 1px solid rgba(148, 163, 184, 0.9);
-      padding: 0.26rem 0.8rem;
-      font-size: 0.8rem;
-      cursor: pointer;
       background: radial-gradient(circle at top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.96));
-      color: #e5e7eb;
+      color: var(--text-main);
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      box-shadow:
-        0 10px 20px rgba(15, 23, 42, 0.9),
-        0 0 0 1px rgba(15, 23, 42, 1);
-      transition: transform 0.06s ease, box-shadow 0.06s ease, border-color 0.06s ease;
+      box-shadow: 0 10px 18px rgba(15, 23, 42, 0.9);
+      transition: transform 0.06s ease, box-shadow 0.06s ease, border-color 0.06s ease, filter 0.06s ease;
     }
 
     .btn:hover {
       transform: translateY(-1px);
-      box-shadow:
-        0 16px 28px rgba(15, 23, 42, 0.9),
-        0 0 0 1px rgba(15, 23, 42, 1);
-      border-color: #38bdf8;
+      box-shadow: 0 16px 26px rgba(15, 23, 42, 0.9);
+      border-color: var(--accent-1);
+      filter: brightness(1.03);
     }
 
     .btn:active {
       transform: translateY(0);
-      box-shadow:
-        0 8px 16px rgba(15, 23, 42, 0.9),
-        0 0 0 1px rgba(15, 23, 42, 1);
+      box-shadow: 0 8px 14px rgba(15, 23, 42, 0.9);
     }
 
     .btn-clean {
-      border-color: rgba(34, 197, 94, 0.9);
-      background: radial-gradient(circle at top left, rgba(22, 163, 74, 1), rgba(15, 23, 42, 0.96));
+      border-color: var(--accent-2);
+      background: radial-gradient(circle at top left, rgba(22, 163, 74, 0.9), rgba(15, 23, 42, 0.96));
     }
 
     .btn-relapse {
-      border-color: rgba(248, 113, 113, 0.95);
-      background: radial-gradient(circle at top left, rgba(248, 113, 113, 1), rgba(15, 23, 42, 0.96));
+      border-color: #f97316;
+      background: radial-gradient(circle at top left, rgba(248, 113, 113, 0.95), rgba(15, 23, 42, 0.96));
+    }
+
+    .badges-section {
+      margin-top: 0.4rem;
+      border-top: 1px dashed rgba(55, 65, 81, 0.8);
+      padding-top: 0.4rem;
+    }
+
+    .badges-title {
+      font-size: 0.76rem;
+      color: var(--text-soft);
+      margin-bottom: 0.25rem;
+    }
+
+    .badges-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+
+    .badge-pill {
+      font-size: 0.75rem;
+      padding: 0.16rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      white-space: nowrap;
+    }
+
+    .badge-pill.earned {
+      border-color: var(--accent-2);
+      color: #bbf7d0;
+      background: rgba(22, 163, 74, 0.14);
+    }
+
+    .badge-pill.locked {
+      border-color: rgba(55, 65, 81, 0.9);
+      color: #6b7280;
+      background: rgba(15, 23, 42, 0.9);
+      opacity: 0.9;
+    }
+
+    .badge-pill .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+    }
+
+    .badge-pill.earned .dot {
+      background: var(--accent-2);
+      box-shadow: 0 0 8px rgba(34, 197, 94, 0.8);
+    }
+
+    .badge-pill.locked .dot {
+      background: rgba(55, 65, 81, 0.9);
     }
 
     .relapse-note {
+      font-size: 0.76rem;
+      color: #fecaca;
       margin-top: 0.35rem;
-      font-size: 0.78rem;
       border-radius: 0.6rem;
       border: 1px dashed rgba(248, 113, 113, 0.9);
-      background: radial-gradient(circle at 0 0, rgba(248, 113, 113, 0.3), rgba(15, 23, 42, 0.98));
+      background: radial-gradient(circle at 0 0, rgba(248, 113, 113, 0.28), rgba(15, 23, 42, 0.96));
       padding: 0.4rem 0.5rem;
     }
 
     .relapse-note-title {
       font-weight: 600;
       margin-bottom: 0.1rem;
-      color: #fecaca;
     }
 
     .relapse-note-body {
       color: #fee2e2;
     }
 
-    .info-line {
-      margin-top: 0.4rem;
-      font-size: 0.74rem;
-      color: #9ca3af;
-    }
-
-    /* Summary & Dual Timeline */
-
-    #summary {
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .summary-card {
-      border-radius: 1rem;
-      padding: 0.7rem 0.8rem 0.8rem;
-      background: var(--card-bg);
-      border: 1px solid var(--border-subtle);
-      box-shadow:
-        0 18px 32px rgba(15, 23, 42, 0.95),
-        0 0 0 1px rgba(15, 23, 42, 0.9);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .summary-card::before {
-      content: "";
-      position: absolute;
-      inset: -30%;
-      background:
-        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.22), transparent 55%),
-        radial-gradient(circle at 100% 100%, rgba(244, 114, 182, 0.22), transparent 55%);
-      pointer-events: none;
-      mix-blend-mode: screen;
-      opacity: 0.7;
-    }
-
-    .summary-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    .summary-title {
-      font-size: 0.9rem;
-      font-weight: 600;
-      margin-bottom: 0.3rem;
-      display: flex;
-      align-items: center;
-      gap: 0.35rem;
-    }
-
-    .summary-title .emoji {
-      font-size: 1rem;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.78rem;
-    }
-
-    th, td {
-      padding: 0.22rem 0.15rem;
-      text-align: left;
-    }
-
-    th {
-      color: #c7d2fe;
-      border-bottom: 1px solid rgba(55, 65, 81, 0.95);
-      font-weight: 500;
-      font-size: 0.76rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-
-    tr:nth-child(even) td {
-      background: rgba(15, 23, 42, 0.85);
-    }
-
-    .duel-line {
-      margin-top: 0.25rem;
-      font-size: 0.8rem;
-      color: #e5e7eb;
-    }
-
-    /* Dual timeline */
-
-    .timeline-legend {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.6rem;
-      font-size: 0.78rem;
-      margin-bottom: 0.35rem;
-    }
-
-    .timeline-legend-side {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-    }
-
-    .legend-chip-left,
-    .legend-chip-right {
-      width: 14px;
-      height: 7px;
-      border-radius: 999px;
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
-    }
-
-    .legend-chip-left {
-      background: linear-gradient(to right, #0ea5e9, #38bdf8);
-    }
-
-    .legend-chip-right {
-      background: linear-gradient(to right, #fb7185, #f97316);
-      box-shadow: 0 0 10px rgba(248, 113, 113, 0.8);
-    }
-
-    .timeline {
-      position: relative;
-      padding: 0.3rem 0.3rem 0.2rem;
-      max-height: 380px;
-      overflow-y: auto;
-      scrollbar-width: thin;
-      scrollbar-color: #4b5563 transparent;
-    }
-
-    .timeline::-webkit-scrollbar {
-      width: 6px;
-    }
-
-    .timeline::-webkit-scrollbar-track {
-      background: transparent;
-    }
-
-    .timeline::-webkit-scrollbar-thumb {
-      background: #4b5563;
-      border-radius: 999px;
-    }
-
-    .timeline-axis {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      transform: translateX(-50%);
-      background: linear-gradient(
-        to bottom,
-        transparent,
-        rgba(148, 163, 184, 0.7),
-        transparent
-      );
-      opacity: 0.7;
-    }
-
-    .timeline-row {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-      gap: 0.35rem;
-      align-items: center;
-      padding: 0.07rem 0;
-    }
-
-    .t-cell {
-      height: 18px;
-      display: flex;
-      align-items: center;
-    }
-
-    .t-left {
-      justify-content: flex-end;
-    }
-    .t-right {
-      justify-content: flex-start;
-    }
-
-    .t-block {
-      height: 14px;
-      min-width: 26px;
-      border-radius: 999px;
-      border: 1px solid transparent;
-      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9);
-      opacity: 0.28;
-      transform-origin: center;
-    }
-
-    .t-block.left {
-      background: linear-gradient(to left, #0ea5e9, #38bdf8);
-      border-color: rgba(56, 189, 248, 0.85);
-    }
-
-    .t-block.right {
-      background: linear-gradient(to right, #fb7185, #f97316);
-      border-color: rgba(248, 113, 113, 0.85);
-    }
-
-    .t-block.active {
-      opacity: 1;
-      box-shadow:
-        0 0 10px rgba(56, 189, 248, 0.8),
-        0 0 0 1px rgba(15, 23, 42, 1);
-      transform: scaleX(1.04);
-    }
-
-    .t-label {
-      font-size: 0.72rem;
-      color: #9ca3af;
-      padding: 0 0.2rem;
-      min-width: 34px;
-      text-align: center;
-    }
-
     footer {
-      position: relative;
-      z-index: 1;
       margin-top: 0.7rem;
-      font-size: 0.74rem;
-      color: #9ca3af;
+      font-size: 0.75rem;
+      color: var(--text-soft);
       text-align: center;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.9);
     }
   </style>
 </head>
 <body>
-  <!-- Low poly accents -->
-  <div class="poly p1"></div>
-  <div class="poly p2"></div>
-  <div class="poly p3"></div>
-
-  <div class="frame">
+  <div class="app">
     <header>
-      <div class="title-block">
-        <div class="logo-line">
-          <div class="logo-poly">🚫</div>
-          <div>
-            <h1>NOFAP DUAL TIMELINE</h1>
-            <div class="tagline">TWO STREAKS · ONE AXIS</div>
+      <div>
+        <div class="logo-wrap">
+          <div class="logo">🚫</div>
+          <div class="title-text">
+            <h1>NoFap Buddy Tracker</h1>
+            <div class="tagline">Jeden Tag kurz checken – kein Drama, klare Zahlen.</div>
           </div>
         </div>
-        <div class="subtitle" id="subtitle">Lade gemeinsamen Stand…</div>
+        <div class="subtitle" id="subtitle">Lade Stand…</div>
       </div>
+
       <div class="status-block">
         <div class="status-row">
           <div class="status-dot" id="statusDot"></div>
-          <div class="status-label" id="statusLabel">Offline</div>
+          <span id="statusLabel">Verbinde…</span>
         </div>
-        <div class="status-hint"></div>
-        <button id="resetAll" class="btn-reset">🔄 Raum zurücksetzen</button>
+        <button id="resetAll" class="btn-reset">🔄 Alles zurücksetzen</button>
       </div>
     </header>
 
     <main>
-      <div class="layout">
-        <!-- LEFT: Player boards -->
-        <section>
-          <div class="column-title">
-            <div class="marker"></div>
-            <span>Streaktracker</span>
+      <section class="summary-row">
+        <div class="card" id="summaryCard">
+          <div class="card-title">
+            <span>📊 Übersicht</span>
           </div>
-          <div class="column-note">
-            Jeden Tag checken, baut Disziplin!
-          </div>
-          <div class="card">
-            <div class="card-inner">
-              <div class="players" id="cards"></div>
-              <div class="info-line">
-                Gespeichert in Firebase Database
-              </div>
-            </div>
-          </div>
-        </section>
+          <div class="overall-stats" id="overallStats"></div>
+          <div class="summary-note" id="summaryNote"></div>
+        </div>
 
-        <!-- RIGHT: Summary & dual timeline -->
-        <section>
-          <div class="column-title">
-            <div class="marker"></div>
-            <span>Übersicht & Dual Timeline</span>
+        <div class="card">
+          <div class="card-title">
+            <span>🎯 90-Tage-Ziel</span>
+            <span class="pill">disziplin statt perfektion</span>
           </div>
-          <div class="column-note">
-            
+          <div id="goalProgress"></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="card">
+          <div class="card-title">
+            <span>👥 Eure Streaks</span>
           </div>
-          <section id="summary"></section>
-        </section>
-      </div>
+          <div class="players-grid" id="players"></div>
+        </div>
+      </section>
     </main>
-  </div>
 
-  <footer id="footer"></footer>
+    <footer id="footer"></footer>
+  </div>
 
   <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
 
   <script>
-    // === HIER DEINE FIREBASE CONFIG EINTRAGEN ===
-     const firebaseConfig = {
-    apiKey: "AIzaSyAVyb0c_fr9mIWW0HoCg_ZVxJAS3h9ZnXM",
-    authDomain: "nofap-checker.firebaseapp.com",
-    databaseURL: "https://nofap-checker-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "nofap-checker",
-    storageBucket: "nofap-checker.firebasestorage.app",
-    messagingSenderId: "635416357056",
-    appId: "1:635416357056:web:e21753e0f76beb7668e525",
-    measurementId: "G-HNWQVTZZNN"
-};
-    // ==========================================
+    // === Firebase Config (deins) ===
+    const firebaseConfig = {
+      apiKey: "AIzaSyAVyb0c_fr9mIWW0HoCg_ZVxJAS3h9ZnXM",
+      authDomain: "nofap-checker.firebaseapp.com",
+      databaseURL: "https://nofap-checker-default-rtdb.europe-west1.firebasedatabase.app",
+      projectId: "nofap-checker",
+      storageBucket: "nofap-checker.firebasestorage.app",
+      messagingSenderId: "635416357056",
+      appId: "1:635416357056:web:e21753e0f76beb7668e525",
+      measurementId: "G-HNWQVTZZNN"
+    };
+    // ================================
     const ROOM_ID = "dual-timeline-room-1";
 
     const DEFAULT_PLAYERS = [
       { id: "p1", name: "Maik" },
       { id: "p2", name: "Marvin" }
+    ];
+
+    // Badge-Definitionen
+    const BADGES = [
+      { id: "streak_3",   label: "3 Tage am Stück",  type: "streak", threshold: 3 },
+      { id: "streak_7",   label: "1 Woche",          type: "streak", threshold: 7 },
+      { id: "streak_14",  label: "2 Wochen",         type: "streak", threshold: 14 },
+      { id: "streak_30",  label: "30 Tage",          type: "streak", threshold: 30 },
+      { id: "streak_60",  label: "60 Tage",          type: "streak", threshold: 60 },
+      { id: "streak_90",  label: "90 Tage",          type: "streak", threshold: 90 },
+      { id: "best_30",    label: "Rekord 30+",       type: "best",   threshold: 30 },
+      { id: "best_60",    label: "Rekord 60+",       type: "best",   threshold: 60 },
+      { id: "bounce_back",label: "Stärker zurück",   type: "bounce", threshold: 1 } // wird speziell geprüft
     ];
 
     let db = null;
@@ -862,7 +606,7 @@
     function defaultState() {
       const today = todayDateStr();
       const players = {};
-      DEFAULT_PLAYERS.forEach((p) => {
+      DEFAULT_PLAYERS.forEach(p => {
         players[p.id] = {
           id: p.id,
           name: p.name,
@@ -883,7 +627,7 @@
         return;
       }
       for (const id of Object.keys(state.players)) {
-        const p = state.players[id];
+        const p = state.players[id] || {};
         if (typeof p.name !== "string") p.name = id;
         if (typeof p.isOnStreak !== "boolean") p.isOnStreak = true;
         if (!p.streakStart) p.streakStart = todayDateStr();
@@ -891,8 +635,9 @@
         if (p.lastRelapseDate === undefined) p.lastRelapseDate = null;
         if (p.lastRelapseReason === undefined) p.lastRelapseReason = "";
         if (p.lastCheckDate === undefined) p.lastCheckDate = null;
+        state.players[id] = p;
       }
-      DEFAULT_PLAYERS.forEach((dp) => {
+      DEFAULT_PLAYERS.forEach(dp => {
         if (!state.players[dp.id]) {
           state.players[dp.id] = {
             id: dp.id,
@@ -916,9 +661,9 @@
     }
 
     function lastRelapseLabel(player) {
-      if (!player.lastRelapseDate) return "Kein Rückfall gespeichert.";
+      if (!player.lastRelapseDate) return "Kein Rückfall gespeichert 🙌";
       const d = parseDate(player.lastRelapseDate);
-      if (!d) return "Datum des letzten Rückfalls unbekannt.";
+      if (!d) return "Datum unbekannt";
       const today = new Date();
       const daysAgo = daysBetween(d, today);
       const dateStr = d.toLocaleDateString();
@@ -928,257 +673,266 @@
     }
 
     function todayChecked(player) {
-      if (!player.lastCheckDate) return false;
       return player.lastCheckDate === todayDateStr();
     }
 
     function updateStatus(connected) {
       const dot = document.getElementById("statusDot");
       const label = document.getElementById("statusLabel");
+      if (!dot || !label) return;
       if (!connected) {
         dot.style.background = "#f97316";
-        dot.style.boxShadow = "0 0 12px rgba(249,115,22,0.9)";
+        dot.style.boxShadow = "0 0 10px rgba(249,115,22,0.9)";
         label.textContent = "Verbinde…";
       } else {
         dot.style.background = "#22c55e";
-        dot.style.boxShadow = "0 0 12px rgba(34,197,94,0.9)";
+        dot.style.boxShadow = "0 0 10px rgba(34,197,94,0.9)";
         label.textContent = "Live verbunden";
       }
     }
 
-    function saveStateToFirebase() {
+    function saveState() {
       if (!db || !hasInitialLoad) return;
       const ref = db.ref("nofapRooms/" + ROOM_ID);
-      ref.set(state).catch((err) => {
-        console.error("Fehler beim Speichern in Firebase:", err);
-      });
+      ref.set(state).catch(err => console.error("Fehler beim Speichern:", err));
     }
 
     function handleCheckClean(playerId) {
-      const player = state.players[playerId];
-      if (!player) return;
+      const p = state.players[playerId];
+      if (!p) return;
       const today = todayDateStr();
 
-      if (!player.isOnStreak) {
-        player.isOnStreak = true;
-        player.streakStart = today;
-      } else if (!player.streakStart) {
-        player.streakStart = today;
+      if (!p.isOnStreak) {
+        p.isOnStreak = true;
+        p.streakStart = today;
+      } else if (!p.streakStart) {
+        p.streakStart = today;
       }
 
-      player.lastCheckDate = today;
-      saveStateToFirebase();
+      p.lastCheckDate = today;
+      saveState();
       renderAll();
     }
 
     function handleRelapse(playerId) {
-      const player = state.players[playerId];
-      if (!player) return;
+      const p = state.players[playerId];
+      if (!p) return;
       const today = todayDateStr();
       const reason = window.prompt(
-        `Was war der Grund für den Rückfall bei ${player.name}? (optional)`,
-        player.lastRelapseReason || ""
+        `Was war der Grund für den Rückfall bei ${p.name}? (optional)`,
+        p.lastRelapseReason || ""
       );
       if (reason === null) return;
 
       let streakLen = 0;
-      if (player.isOnStreak && player.streakStart) {
-        const start = parseDate(player.streakStart);
+      if (p.isOnStreak && p.streakStart) {
+        const start = parseDate(p.streakStart);
         if (start) {
           const yesterday = new Date();
           yesterday.setDate(yesterday.getDate() - 1);
           streakLen = daysBetween(start, yesterday) + 1;
         }
       }
+      if (streakLen > p.bestStreak) p.bestStreak = streakLen;
 
-      if (streakLen > player.bestStreak) {
-        player.bestStreak = streakLen;
-      }
+      p.isOnStreak = false;
+      p.lastRelapseDate = today;
+      p.lastRelapseReason = reason.trim();
+      p.lastCheckDate = today;
 
-      player.isOnStreak = false;
-      player.lastRelapseDate = today;
-      player.lastRelapseReason = reason.trim();
-      player.lastCheckDate = today;
-
-      saveStateToFirebase();
+      saveState();
       renderAll();
     }
 
     function handleNameChange(playerId, newName) {
-      const player = state.players[playerId];
-      if (!player) return;
-      player.name = newName.trim() || player.name || playerId;
-      saveStateToFirebase();
+      const p = state.players[playerId];
+      if (!p) return;
+      const trimmed = newName.trim();
+      if (trimmed) p.name = trimmed;
+      saveState();
       renderAll();
     }
 
     function handleResetAll() {
       if (!window.confirm("Wirklich alle Daten für euch beide zurücksetzen?")) return;
       state = defaultState();
-      saveStateToFirebase();
+      saveState();
       renderAll();
     }
 
-    /* Tally builder */
+    // Badges
 
-    function buildTally(container, count) {
-      container.innerHTML = "";
-      if (count <= 0) {
-        const empty = document.createElement("span");
-        empty.className = "tally-empty";
-        empty.textContent = "noch keine Striche";
-        container.appendChild(empty);
-        return;
-      }
+    function getBadgesForPlayer(player) {
+      const current = currentStreakDays(player);
+      const best = player.bestStreak || 0;
+      const result = [];
 
-      const maxShown = 60;
-      const shown = Math.min(count, maxShown);
-      const groups = Math.floor(shown / 5);
-      const rest = shown % 5;
-
-      for (let g = 0; g < groups; g++) {
-        const group = document.createElement("span");
-        group.className = "tally-group";
-
-        for (let i = 0; i < 4; i++) {
-          const stick = document.createElement("span");
-          stick.className = "tally-stick";
-          group.appendChild(stick);
+      BADGES.forEach(b => {
+        let earned = false;
+        if (b.type === "streak") {
+          earned = current >= b.threshold;
+        } else if (b.type === "best") {
+          earned = best >= b.threshold;
+        } else if (b.type === "bounce") {
+          // z.B. nach einem Rückfall wieder min. 3 Tage geschafft
+          if (player.lastRelapseDate && current >= 3) earned = true;
         }
-        const diag = document.createElement("span");
-        diag.className = "tally-diagonal";
-        group.appendChild(diag);
+        result.push({ ...b, earned });
+      });
 
-        container.appendChild(group);
-      }
-
-      if (rest > 0) {
-        const group = document.createElement("span");
-        group.className = "tally-group";
-        for (let i = 0; i < rest; i++) {
-          const stick = document.createElement("span");
-          stick.className = "tally-stick";
-          group.appendChild(stick);
-        }
-        container.appendChild(group);
-      }
-
-      if (count > maxShown) {
-        const extra = document.createElement("span");
-        extra.className = "tally-label-number";
-        extra.textContent = `  +${count - maxShown}`;
-        container.appendChild(extra);
-      }
+      return result;
     }
 
-    function renderCards() {
-      const cardsContainer = document.getElementById("cards");
-      cardsContainer.innerHTML = "";
-      if (!state || !state.players) return;
+    // Rendering
 
-      const players = Object.values(state.players);
+    function renderSummary() {
+      const overallContainer = document.getElementById("overallStats");
+      const note = document.getElementById("summaryNote");
+      const goalProgress = document.getElementById("goalProgress");
+      if (!overallContainer || !note || !goalProgress) return;
 
-      players.forEach((player) => {
+      overallContainer.innerHTML = "";
+      goalProgress.innerHTML = "";
+
+      const players = Object.values(state.players || {});
+      if (players.length === 0) return;
+
+      // Übersicht pro Person
+      players.forEach(p => {
+        const current = currentStreakDays(p);
+        const wrap = document.createElement("div");
+        wrap.className = "overall-item";
+
+        const label = document.createElement("div");
+        label.className = "overall-label";
+        label.textContent = p.name;
+
+        const value = document.createElement("div");
+        value.className = "overall-value";
+        value.innerHTML = `<span class="highlight">${current}</span> Tage · Rekord ${p.bestStreak} Tage`;
+
+        wrap.appendChild(label);
+        wrap.appendChild(value);
+        overallContainer.appendChild(wrap);
+      });
+
+      // Vergleich-Satz
+      if (players.length === 2) {
+        const [a, b] = players;
+        const aStreak = currentStreakDays(a);
+        const bStreak = currentStreakDays(b);
+        const aBest = a.bestStreak || 0;
+        const bBest = b.bestStreak || 0;
+        let text = "";
+
+        if (aStreak > bStreak) {
+          text += `👑 Aktuell vorne: ${a.name} (${aStreak} vs. ${bStreak} Tage). `;
+        } else if (bStreak > aStreak) {
+          text += `👑 Aktuell vorne: ${b.name} (${bStreak} vs. ${aStreak} Tage). `;
+        } else {
+          text += `🤝 Gleichstand – beide ${aStreak} Tage. `;
+        }
+
+        if (aBest > bBest) {
+          text += `Rekordhalter: ${a.name} mit ${aBest} Tagen.`;
+        } else if (bBest > aBest) {
+          text += `Rekordhalter: ${b.name} mit ${bBest} Tagen.`;
+        } else {
+          text += `Eure Rekorde sind gleich hoch (${aBest} Tage).`;
+        }
+
+        note.textContent = text;
+      } else {
+        note.textContent = "Checkt einfach jeden Tag einmal kurz ein. Konstanz > Perfektion.";
+      }
+
+      // 90-Tage-Balken pro Person
+      players.forEach(p => {
+        const current = currentStreakDays(p);
+        const percent = Math.max(0, Math.min(100, (current / 90) * 100));
+
+        const block = document.createElement("div");
+        block.className = "overall-item";
+        block.style.marginBottom = "0.4rem";
+
+        const label = document.createElement("div");
+        label.className = "overall-label";
+        label.textContent = `${p.name} – ${current}/90 Tage`;
+
+        const bar = document.createElement("div");
+        bar.className = "progress-bar";
+        const inner = document.createElement("div");
+        inner.className = "progress-inner";
+        inner.style.width = percent.toFixed(1) + "%";
+        bar.appendChild(inner);
+
+        block.appendChild(label);
+        block.appendChild(bar);
+        goalProgress.appendChild(block);
+      });
+    }
+
+    function renderPlayers() {
+      const container = document.getElementById("players");
+      if (!container) return;
+      container.innerHTML = "";
+
+      const players = Object.values(state.players || {});
+      players.forEach(p => {
+        const current = currentStreakDays(p);
+
         const card = document.createElement("div");
         card.className = "player-card";
 
-        const headerRow = document.createElement("div");
-        headerRow.className = "player-header-row";
+        const header = document.createElement("div");
+        header.className = "player-header";
 
-        const nameEl = document.createElement("div");
-        nameEl.className = "player-name";
-        nameEl.textContent = player.name;
+        const leftHeader = document.createElement("div");
+        const name = document.createElement("div");
+        name.className = "player-name";
+        name.textContent = p.name;
+        leftHeader.appendChild(name);
 
-        const badge = document.createElement("div");
-        badge.className = "badge " + (player.isOnStreak ? "active" : "inactive");
+        const input = document.createElement("input");
+        input.className = "name-input";
+        input.value = p.name;
+        input.placeholder = "Name ändern…";
+        input.addEventListener("change", e => handleNameChange(p.id, e.target.value));
+        leftHeader.appendChild(input);
+
+        const chip = document.createElement("div");
+        chip.className = "streak-chip " + (p.isOnStreak ? "on" : "off");
         const dot = document.createElement("span");
         dot.className = "dot";
         const label = document.createElement("span");
-        label.textContent = player.isOnStreak ? "AUF STREAK" : "RÜCKFALL";
-        badge.appendChild(dot);
-        badge.appendChild(label);
+        label.textContent = p.isOnStreak ? "auf Streak" : "Reset – neuer Start";
 
-        headerRow.appendChild(nameEl);
-        headerRow.appendChild(badge);
-        card.appendChild(headerRow);
+        chip.appendChild(dot);
+        chip.appendChild(label);
 
-        const nameInput = document.createElement("input");
-        nameInput.className = "username-input";
-        nameInput.value = player.name;
-        nameInput.placeholder = "Name ändern…";
-        nameInput.addEventListener("change", (e) =>
-          handleNameChange(player.id, e.target.value)
-        );
-        card.appendChild(nameInput);
+        header.appendChild(leftHeader);
+        header.appendChild(chip);
+        card.appendChild(header);
 
-        const stats = document.createElement("div");
-        stats.className = "stats-block";
+        const stat1 = document.createElement("div");
+        stat1.className = "stat-row";
+        stat1.innerHTML = `<div class="stat-label">Aktuelle Streak</div><div class="stat-value">${current} Tag(e)</div>`;
+        card.appendChild(stat1);
 
-        const current = currentStreakDays(player);
+        const stat2 = document.createElement("div");
+        stat2.className = "stat-row";
+        stat2.innerHTML = `<div class="stat-label">Bester Rekord</div><div class="stat-value">${p.bestStreak} Tag(e)</div>`;
+        card.appendChild(stat2);
 
-        const streakLine = document.createElement("div");
-        streakLine.className = "stat-line";
-        const sLabel = document.createElement("div");
-        sLabel.className = "stat-label";
-        sLabel.textContent = "Aktuelle Streak (inkl. heute)";
-        const sRow = document.createElement("div");
-        sRow.className = "tally-row";
-        const sTally = document.createElement("div");
-        buildTally(sTally, current);
-        const sNum = document.createElement("span");
-        sNum.className = "tally-label-number";
-        sNum.textContent = ` (${current} Tag(e))`;
-        sRow.appendChild(sTally);
-        sRow.appendChild(sNum);
-        streakLine.appendChild(sLabel);
-        streakLine.appendChild(sRow);
-        stats.appendChild(streakLine);
-
-        const bestLine = document.createElement("div");
-        bestLine.className = "stat-line";
-        const bLabel = document.createElement("div");
-        bLabel.className = "stat-label";
-        bLabel.textContent = "Bester Rekord";
-        const bRow = document.createElement("div");
-        bRow.className = "tally-row";
-        const bTally = document.createElement("div");
-        buildTally(bTally, player.bestStreak);
-        const bNum = document.createElement("span");
-        bNum.className = "tally-label-number";
-        bNum.textContent = ` (${player.bestStreak} Tag(e))`;
-        bRow.appendChild(bTally);
-        bRow.appendChild(bNum);
-        bestLine.appendChild(bLabel);
-        bestLine.appendChild(bRow);
-        stats.appendChild(bestLine);
+        const stat3 = document.createElement("div");
+        stat3.className = "stat-row";
+        stat3.innerHTML = `<div class="stat-label">Letzter Rückfall</div><div class="stat-value">${lastRelapseLabel(p)}</div>`;
+        card.appendChild(stat3);
 
         const todayLine = document.createElement("div");
-        todayLine.className = "stat-line";
-        const tLabel = document.createElement("div");
-        tLabel.className = "stat-label";
-        tLabel.textContent = "Heute";
-        const tVal = document.createElement("div");
-        tVal.className = "stat-value";
-        tVal.textContent = todayChecked(player) ? "Schon markiert ✅" : "Noch nicht markiert";
-        todayLine.appendChild(tLabel);
-        todayLine.appendChild(tVal);
-        stats.appendChild(todayLine);
-
-        const relapseLine = document.createElement("div");
-        relapseLine.className = "stat-line";
-        const rLabel = document.createElement("div");
-        rLabel.className = "stat-label";
-        rLabel.textContent = "Letzter Rückfall";
-        const rVal = document.createElement("div");
-        rVal.className = "stat-value";
-        rVal.textContent = player.lastRelapseDate
-          ? lastRelapseLabel(player)
-          : "Keiner gespeichert 🙌";
-        relapseLine.appendChild(rLabel);
-        relapseLine.appendChild(rVal);
-        stats.appendChild(relapseLine);
-
-        card.appendChild(stats);
+        todayLine.className = "today-status";
+        todayLine.textContent = todayChecked(p) ? "Heute schon markiert ✅" : "Heute noch nicht markiert";
+        card.appendChild(todayLine);
 
         const btnRow = document.createElement("div");
         btnRow.className = "btn-row";
@@ -1186,294 +940,123 @@
         const btnClean = document.createElement("button");
         btnClean.className = "btn btn-clean";
         btnClean.textContent = "✅ Heute clean";
-        btnClean.addEventListener("click", () => handleCheckClean(player.id));
+        btnClean.addEventListener("click", () => handleCheckClean(p.id));
 
         const btnRelapse = document.createElement("button");
         btnRelapse.className = "btn btn-relapse";
         btnRelapse.textContent = "💥 Heute Rückfall";
-        btnRelapse.addEventListener("click", () => handleRelapse(player.id));
+        btnRelapse.addEventListener("click", () => handleRelapse(p.id));
 
         btnRow.appendChild(btnClean);
         btnRow.appendChild(btnRelapse);
         card.appendChild(btnRow);
 
-        if (player.lastRelapseDate || player.lastRelapseReason) {
+        // Badges
+        const badgesWrap = document.createElement("div");
+        badgesWrap.className = "badges-section";
+
+        const badgesTitle = document.createElement("div");
+        badgesTitle.className = "badges-title";
+        badgesTitle.textContent = "Badges (Streak & Rekord)";
+        badgesWrap.appendChild(badgesTitle);
+
+        const badgesList = document.createElement("div");
+        badgesList.className = "badges-list";
+
+        const badges = getBadgesForPlayer(p);
+        badges.forEach(b => {
+          const pill = document.createElement("div");
+          pill.className = "badge-pill " + (b.earned ? "earned" : "locked");
+          const dotBadge = document.createElement("span");
+          dotBadge.className = "dot";
+          const txt = document.createElement("span");
+          txt.textContent = b.label;
+          pill.appendChild(dotBadge);
+          pill.appendChild(txt);
+          badgesList.appendChild(pill);
+        });
+
+        badgesWrap.appendChild(badgesList);
+        card.appendChild(badgesWrap);
+
+        // Rückfall-Notiz
+        if (p.lastRelapseDate || p.lastRelapseReason) {
           const note = document.createElement("div");
           note.className = "relapse-note";
-
           const title = document.createElement("div");
           title.className = "relapse-note-title";
           title.textContent = "Notiz zum letzten Rückfall";
-
           const body = document.createElement("div");
           body.className = "relapse-note-body";
-          body.textContent = player.lastRelapseReason
-            ? player.lastRelapseReason
-            : "Kein Grund eingetragen.";
-
+          body.textContent = p.lastRelapseReason || "Kein Grund eingetragen.";
           note.appendChild(title);
           note.appendChild(body);
           card.appendChild(note);
         }
 
-        cardsContainer.appendChild(card);
+        container.appendChild(card);
       });
-    }
-
-    function renderTimeline(players) {
-      const timelineCard = document.createElement("div");
-      timelineCard.className = "summary-card";
-
-      const inner = document.createElement("div");
-      inner.className = "summary-inner";
-
-      const title = document.createElement("div");
-      title.className = "summary-title";
-      title.innerHTML = '<span class="emoji">⏱️</span><span>Dual Timeline</span>';
-      inner.appendChild(title);
-
-      const legend = document.createElement("div");
-      legend.className = "timeline-legend";
-
-      const leftName = (state.players["p1"] && state.players["p1"].name) || (players[0] && players[0].name) || "Links";
-      const rightName = (state.players["p2"] && state.players["p2"].name) || (players[1] && players[1].name) || "Rechts";
-
-      const leftSide = document.createElement("div");
-      leftSide.className = "timeline-legend-side";
-      leftSide.innerHTML = `<div class="legend-chip-left"></div><span>${leftName}</span>`;
-
-      const rightSide = document.createElement("div");
-      rightSide.className = "timeline-legend-side";
-      rightSide.innerHTML = `<span>${rightName}</span><div class="legend-chip-right"></div>`;
-
-      const middle = document.createElement("div");
-      middle.style.fontSize = "0.75rem";
-      middle.style.color = "#9ca3af";
-      middle.textContent = "Skala in Tagen – oben = längere Streak";
-
-      legend.appendChild(leftSide);
-      legend.appendChild(middle);
-      legend.appendChild(rightSide);
-      inner.appendChild(legend);
-
-      const tl = document.createElement("div");
-      tl.className = "timeline";
-
-      const axis = document.createElement("div");
-      axis.className = "timeline-axis";
-      tl.appendChild(axis);
-
-      const leftPlayer = state.players["p1"] || players[0] || null;
-      const rightPlayer = state.players["p2"] || players[1] || null;
-
-      const leftStreak = leftPlayer ? currentStreakDays(leftPlayer) : 0;
-      const rightStreak = rightPlayer ? currentStreakDays(rightPlayer) : 0;
-      const maxStreak = Math.max(leftStreak, rightStreak, 1);
-      const maxDisplay = Math.min(maxStreak, 45);
-
-      for (let day = maxDisplay; day >= 1; day--) {
-        const row = document.createElement("div");
-        row.className = "timeline-row";
-
-        const leftCell = document.createElement("div");
-        leftCell.className = "t-cell t-left";
-        const leftBlock = document.createElement("div");
-        leftBlock.className = "t-block left";
-        if (day <= leftStreak) leftBlock.classList.add("active");
-        leftCell.appendChild(leftBlock);
-
-        const labelCell = document.createElement("div");
-        labelCell.className = "t-label";
-        labelCell.textContent = `${day}`;
-
-        const rightCell = document.createElement("div");
-        rightCell.className = "t-cell t-right";
-        const rightBlock = document.createElement("div");
-        rightBlock.className = "t-block right";
-        if (day <= rightStreak) rightBlock.classList.add("active");
-        rightCell.appendChild(rightBlock);
-
-        row.appendChild(leftCell);
-        row.appendChild(labelCell);
-        row.appendChild(rightCell);
-        tl.appendChild(row);
-      }
-
-      inner.appendChild(tl);
-      timelineCard.appendChild(inner);
-      return timelineCard;
-    }
-
-    function renderSummary() {
-      const summary = document.getElementById("summary");
-      summary.innerHTML = "";
-      if (!state || !state.players) return;
-
-      const players = Object.values(state.players);
-
-      // Overview card
-      const overview = document.createElement("div");
-      overview.className = "summary-card";
-      const oInner = document.createElement("div");
-      oInner.className = "summary-inner";
-
-      const oTitle = document.createElement("div");
-      oTitle.className = "summary-title";
-      oTitle.innerHTML = '<span class="emoji">📊</span><span>Gesamtübersicht</span>';
-      oInner.appendChild(oTitle);
-
-      const tbl = document.createElement("table");
-      const headRow = document.createElement("tr");
-      headRow.innerHTML =
-        "<th>Person</th><th>Aktuelle Streak</th><th>Bester Rekord</th><th>Letzter Rückfall</th>";
-      tbl.appendChild(headRow);
-
-      players.forEach((p) => {
-        const tr = document.createElement("tr");
-        const streakNow = currentStreakDays(p);
-        const lastLabel = p.lastRelapseDate ? lastRelapseLabel(p) : "Keiner 🙌";
-        tr.innerHTML = `
-          <td>${p.name}</td>
-          <td>${streakNow} Tag(e)</td>
-          <td>${p.bestStreak} Tag(e)</td>
-          <td>${lastLabel}</td>
-        `;
-        tbl.appendChild(tr);
-      });
-
-      oInner.appendChild(tbl);
-
-      if (players.length === 2) {
-        const [a, b] = players;
-        const aStreak = currentStreakDays(a);
-        const bStreak = currentStreakDays(b);
-        let lineStreak = "";
-        if (aStreak > bStreak) {
-          lineStreak = `👑 ${a.name} führt aktuell (${aStreak} vs. ${bStreak} Tag(e)).`;
-        } else if (bStreak > aStreak) {
-          lineStreak = `👑 ${b.name} führt aktuell (${bStreak} vs. ${aStreak} Tag(e)).`;
-        } else {
-          lineStreak = `🤝 Gleichstand – beide ${aStreak} Tag(e).`;
-        }
-
-        const aBest = a.bestStreak;
-        const bBest = b.bestStreak;
-        let lineBest = "";
-        if (aBest > bBest) {
-          lineBest = `🏅 Rekordhalter: ${a.name} mit ${aBest} Tag(en).`;
-        } else if (bBest > aBest) {
-          lineBest = `🏅 Rekordhalter: ${b.name} mit ${bBest} Tag(en).`;
-        } else {
-          lineBest = `🏅 Eure Rekorde sind gleich hoch: ${aBest} Tag(e).`;
-        }
-
-        const l1 = document.createElement("div");
-        l1.className = "duel-line";
-        l1.textContent = lineStreak;
-
-        const l2 = document.createElement("div");
-        l2.className = "duel-line";
-        l2.textContent = lineBest;
-
-        oInner.appendChild(l1);
-        oInner.appendChild(l2);
-      }
-
-      overview.appendChild(oInner);
-      summary.appendChild(overview);
-
-      // Dual timeline card
-      const tlCard = renderTimeline(players);
-      summary.appendChild(tlCard);
     }
 
     function renderMeta() {
       const subtitle = document.getElementById("subtitle");
       const footer = document.getElementById("footer");
       const now = new Date();
-
-      subtitle.textContent =
-        `Jeder Tag ein Strich. Stand: ${now.toLocaleString()}`;
-      footer.textContent =
-        "90 Tage ist das Ziel!";
+      if (subtitle) {
+        subtitle.textContent = `Stand: ${now.toLocaleString()}`;
+      }
+      if (footer) {
+        footer.textContent = "Ziel: 90 Tage. Wenn ein Rückfall passiert: ruhig resetten und weiter machen.";
+      }
     }
 
     function renderAll() {
-      renderCards();
+      ensureStateShape();
       renderSummary();
+      renderPlayers();
       renderMeta();
       updateStatus(hasInitialLoad);
     }
 
-    function initFirebaseAndSubscribe() {
+    function initFirebase() {
       try {
         firebase.initializeApp(firebaseConfig);
         db = firebase.database();
       } catch (e) {
-        console.error("Fehler beim Initialisieren von Firebase:", e);
+        console.error("Firebase Init Fehler:", e);
         updateStatus(false);
         return;
       }
 
       const ref = db.ref("nofapRooms/" + ROOM_ID);
-
-      ref.on("value", (snapshot) => {
-        if (!snapshot.exists()) {
-          state = defaultState();
+      ref.on(
+        "value",
+        snapshot => {
+          if (!snapshot.exists()) {
+            state = defaultState();
+            ensureStateShape();
+            hasInitialLoad = true;
+            saveState();
+            renderAll();
+            return;
+          }
+          state = snapshot.val();
           ensureStateShape();
           hasInitialLoad = true;
-          saveStateToFirebase();
           renderAll();
-          return;
+        },
+        err => {
+          console.error("Fehler beim Lesen von Firebase:", err);
+          hasInitialLoad = false;
+          updateStatus(false);
         }
-        state = snapshot.val();
-        ensureStateShape();
-        hasInitialLoad = true;
-        renderAll();
-      }, (err) => {
-        console.error("Fehler beim Lesen von Firebase:", err);
-        hasInitialLoad = false;
-        updateStatus(false);
-      });
+      );
     }
 
-    function init() {
-      const resetBtn = document.getElementById("resetAll");
-      if (resetBtn) {
-        resetBtn.addEventListener("click", handleResetAll);
-      }
-      // Fallback falls ID anders (aktuell: resetAll)
-      const resetAlt = document.getElementById("resetAll") || document.getElementById("resetAllBtn");
-      if (resetAlt && resetAlt !== resetBtn) {
-        resetAlt.addEventListener("click", handleResetAll);
-      }
-
-      // Korrekt: unser Button heißt resetAll
-      const realBtn = document.getElementById("resetAll");
-      if (!realBtn) {
-        const headerBtn = document.getElementById("resetAllHeader");
-        if (headerBtn) headerBtn.addEventListener("click", handleResetAll);
-      }
-
-      // Eigentlich reicht:
-      const btnHeader = document.getElementById("resetAll");
-      if (btnHeader) {
-        btnHeader.addEventListener("click", handleResetAll);
-      }
-
-      // Aber unser tatsächlicher Button hat id="resetAll" im HTML oben:
-      // Der hier ist entscheidend:
-      document.getElementById("resetAll").addEventListener("click", handleResetAll);
-
-      renderMeta();
-      initFirebaseAndSubscribe();
-    }
-
-    // Fix: id im HTML ist "resetAll" -> kurzer Helper
     document.addEventListener("DOMContentLoaded", () => {
-      document.getElementById("resetAll").addEventListener("click", handleResetAll);
-      initFirebaseAndSubscribe();
+      document.getElementById("resetAll")?.addEventListener("click", handleResetAll);
       renderMeta();
+      initFirebase();
     });
   </script>
 </body>
