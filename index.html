@@ -701,6 +701,112 @@
       padding: 0.8rem 0.85rem;
     }
   }
+
+
+  /* Highlight card if today is marked */
+.player-card.checked-today {
+  border-color: var(--accent-2);
+  box-shadow:
+    0 0 0 1px rgba(34, 197, 94, 0.8),
+    0 20px 40px rgba(22, 163, 74, 0.55);
+}
+
+/* Slightly dim cards with no check-in today */
+.player-card.not-checked-today {
+  opacity: 0.75;
+}
+
+/* Big vertical indicator bar on the left side */
+.today-indicator {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  width: 5px;
+  border-radius: 18px 0 0 18px;
+  background: rgba(55, 65, 81, 0.9);
+  box-shadow: none;
+}
+
+.today-indicator.checked {
+  background: var(--accent-2);
+  box-shadow: 0 0 16px rgba(34, 197, 94, 0.9);
+}
+
+/* Today status pill – much more visible */
+.today-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.78rem;
+  margin-top: 0.45rem;
+  padding: 0.22rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid transparent;
+}
+
+.today-status.checked {
+  background: rgba(22, 163, 74, 0.18);
+  color: #bbf7d0;
+  border-color: rgba(34, 197, 94, 0.9);
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+}
+
+.today-status.not-checked {
+  background: rgba(15, 23, 42, 0.96);
+  color: var(--text-soft);
+  border-style: dashed;
+  border-color: rgba(148, 163, 184, 0.8);
+}
+.flatline-box {
+  margin-top: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 14px;
+  border: 1px dashed rgba(234, 179, 8, 0.9);
+  background: radial-gradient(circle at 0 0, rgba(253, 224, 71, 0.18), rgba(15, 23, 42, 0.96));
+  box-shadow: 0 0 22px rgba(250, 204, 21, 0.25);
+  font-size: 0.78rem;
+}
+
+.flatline-title {
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+  color: #fde68a;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.flatline-body {
+  color: #fef3c7;
+  opacity: 0.95;
+}
+
+.period-hint-box {
+  margin-top: 0.6rem;
+  padding: 0.55rem 0.7rem;
+  border-radius: 14px;
+  border: 1px solid rgba(59, 130, 246, 0.7);
+  background: radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.15), rgba(15, 23, 42, 0.96));
+  box-shadow: 0 0 22px rgba(59, 130, 246, 0.25);
+  font-size: 0.78rem;
+}
+
+.period-hint-title {
+  font-weight: 700;
+  margin-bottom: 0.2rem;
+  color: #bfdbfe;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.period-hint-body {
+  color: #dbeafe;
+  opacity: 0.95;
+}
+
+
 </style>
 
 
@@ -785,18 +891,22 @@
       { id: "p2", name: "Marvin" }
     ];
 
-    // Badge-Definitionen
+    // Badge-Definitionen – nur Streak, in kleineren Schritten
     const BADGES = [
-      { id: "streak_3",   label: "3 Tage am Stück",  type: "streak", threshold: 3 },
-      { id: "streak_7",   label: "1 Woche",          type: "streak", threshold: 7 },
-      { id: "streak_14",  label: "2 Wochen",         type: "streak", threshold: 14 },
-      { id: "streak_30",  label: "30 Tage",          type: "streak", threshold: 30 },
-      { id: "streak_60",  label: "60 Tage",          type: "streak", threshold: 60 },
-      { id: "streak_90",  label: "90 Tage",          type: "streak", threshold: 90 },
-      { id: "best_30",    label: "Rekord 30+",       type: "best",   threshold: 30 },
-      { id: "best_60",    label: "Rekord 60+",       type: "best",   threshold: 60 },
-      { id: "bounce_back",label: "Stärker zurück",   type: "bounce", threshold: 1 } // wird speziell geprüft
+      { id: "streak_1",  label: "1 Tag geschafft",      type: "streak", threshold: 1 },
+      { id: "streak_3",  label: "3 Tage am Stück",      type: "streak", threshold: 3 },
+      { id: "streak_5",  label: "5 Tage am Stück",      type: "streak", threshold: 5 },
+      { id: "streak_7",  label: "1 Woche",              type: "streak", threshold: 7 },
+      { id: "streak_10", label: "10 Tage am Stück",     type: "streak", threshold: 10 },
+      { id: "streak_14", label: "2 Wochen",             type: "streak", threshold: 14 },
+      { id: "streak_21", label: "3 Wochen",             type: "streak", threshold: 21 },
+      { id: "streak_30", label: "30 Tage",              type: "streak", threshold: 30 },
+      { id: "streak_45", label: "45 Tage",              type: "streak", threshold: 45 },
+      { id: "streak_60", label: "60 Tage",              type: "streak", threshold: 60 },
+      { id: "streak_75", label: "75 Tage",              type: "streak", threshold: 75 },
+      { id: "streak_90", label: "90 Tage – Ziel",       type: "streak", threshold: 90 }
     ];
+
 
     let db = null;
     let state = null;
@@ -870,6 +980,72 @@
       });
     }
 
+
+    function getPeriodHint(player) {
+  const d = currentStreakDays(player);
+
+  if (d <= 3) {
+    return {
+      title: "🚀 Startphase",
+      text:
+        "Häufige Effekte: starker Drang, Nervosität, Reizbarkeit, viel Energie im Kopf. " +
+        "Tipp: Struktur, Bewegung und genug Schlaf helfen enorm."
+    };
+  }
+
+  if (d <= 7) {
+    return {
+      title: "🔥 Entzugsphase (erste Woche)",
+      text:
+        "Typisch: Stimmungsschwankungen, unruhiger Schlaf, mehr Gedanken an Sex/Porn. " +
+        "Das ist dein Gehirn, das alte Gewohnheiten loslässt."
+    };
+  }
+
+  if (d <= 14) {
+    return {
+      title: "⚖️ Anpassungsphase (Woche 2)",
+      text:
+        "Viele berichten von mehr Energie, aber emotionalem Chaos. " +
+        "Routine hilft jetzt sehr – Training, Kälte, soziale Kontakte."
+    };
+  }
+
+  if (d <= 24) {
+    return {
+      title: "⚠️ Mögliche Flatline-Phase",
+      text:
+        "Wenig Lust, weniger Motivation oder ‚emotional flach‘? Das ist normal. " +
+        "Dein Gehirn reguliert Dopamin-Sensitivität. Das geht vorbei."
+    };
+  }
+
+  if (d <= 35) {
+    return {
+      title: "💪 Stabilisierung beginnt",
+      text:
+        "Mehr Klarheit im Kopf, bessere Konzentration und weniger Zwangsdrang sind häufig. " +
+        "Jetzt ist die Gefahr: ‚Ich hab’s im Griff, ich kann ja kurz…‘ – bleib dran."
+    };
+  }
+
+  if (d <= 50) {
+    return {
+      title: "🏃‍♂️ Neue Gewohnheiten bilden sich",
+      text:
+        "Dein Gehirn gewöhnt sich an das Leben ohne ständige Stimulation. " +
+        "Viele erleben bessere Stimmung, Produktivität und Sozialkontakt."
+    };
+  }
+
+  return {
+    title: "👑 Long-Streak-Phase",
+    text:
+      "Die meisten profitieren jetzt von mehr Selbstvertrauen, Ruhe und Fokus. " +
+      "Bleib wachsam: Trigger meiden, Ziele im Blick behalten."
+  };
+}
+
     function currentStreakDays(player) {
       if (!player.isOnStreak || !player.streakStart) return 0;
       const start = parseDate(player.streakStart);
@@ -931,6 +1107,18 @@
       renderAll();
     }
 
+    function isInFlatlineWindow(player) {
+  const days = currentStreakDays(player);
+
+  // typischer Erfahrungswertbereiche
+  const windows = [
+    { from: 14, to: 24 }, // Woche 3 herum
+    { from: 38, to: 48 }  // ca. Woche 6
+  ];
+
+  return windows.some(w => days >= w.from && days <= w.to);
+}
+
     function handleRelapse(playerId) {
       const p = state.players[playerId];
       if (!p) return;
@@ -972,25 +1160,13 @@
     // Badges
 
     function getBadgesForPlayer(player) {
-      const current = currentStreakDays(player);
-      const best = player.bestStreak || 0;
-      const result = [];
+  const current = currentStreakDays(player);
 
-      BADGES.forEach(b => {
-        let earned = false;
-        if (b.type === "streak") {
-          earned = current >= b.threshold;
-        } else if (b.type === "best") {
-          earned = best >= b.threshold;
-        } else if (b.type === "bounce") {
-          // z.B. nach einem Rückfall wieder min. 3 Tage geschafft
-          if (player.lastRelapseDate && current >= 3) earned = true;
-        }
-        result.push({ ...b, earned });
-      });
-
-      return result;
-    }
+  return BADGES.map(b => {
+    const earned = current >= b.threshold;
+    return { ...b, earned };
+  });
+}
 
     // Rendering
 
@@ -1088,116 +1264,166 @@
 
       const players = Object.values(state.players || {});
       players.forEach(p => {
-        const current = currentStreakDays(p);
+  const current = currentStreakDays(p);
+  const checkedToday = todayChecked(p);
 
-        const card = document.createElement("div");
-        card.className = "player-card";
+  const card = document.createElement("div");
+  card.className = "player-card " + (checkedToday ? "checked-today" : "not-checked-today");
 
-        const header = document.createElement("div");
-        header.className = "player-header";
+  // vertical indicator bar
+  const indicator = document.createElement("div");
+  indicator.className = "today-indicator" + (checkedToday ? " checked" : "");
+  card.appendChild(indicator);
 
-        const leftHeader = document.createElement("div");
-        const name = document.createElement("div");
-        name.className = "player-name";
-        name.textContent = p.name;
-        leftHeader.appendChild(name);   
+  const header = document.createElement("div");
+  header.className = "player-header";
 
-        const chip = document.createElement("div");
-        chip.className = "streak-chip " + (p.isOnStreak ? "on" : "off");
-        const dot = document.createElement("span");
-        dot.className = "dot";
-        const label = document.createElement("span");
-        label.textContent = p.isOnStreak ? "auf Streak" : "Reset – neuer Start";
+  const leftHeader = document.createElement("div");
+  const name = document.createElement("div");
+  name.className = "player-name";
+  name.textContent = p.name;
+  leftHeader.appendChild(name);
 
-        chip.appendChild(dot);
-        chip.appendChild(label);
+  const chip = document.createElement("div");
+  chip.className = "streak-chip " + (p.isOnStreak ? "on" : "off");
+  const dot = document.createElement("span");
+  dot.className = "dot";
+  const label = document.createElement("span");
+  label.textContent = p.isOnStreak ? "auf Streak" : "Reset – neuer Start";
 
-        header.appendChild(leftHeader);
-        header.appendChild(chip);
-        card.appendChild(header);
+  chip.appendChild(dot);
+  chip.appendChild(label);
 
-        const stat1 = document.createElement("div");
-        stat1.className = "stat-row";
-        stat1.innerHTML = `<div class="stat-label">Aktuelle Streak</div><div class="stat-value">${current} Tag(e)</div>`;
-        card.appendChild(stat1);
+  header.appendChild(leftHeader);
+  header.appendChild(chip);
+  card.appendChild(header);
 
-        const stat2 = document.createElement("div");
-        stat2.className = "stat-row";
-        stat2.innerHTML = `<div class="stat-label">Bester Rekord</div><div class="stat-value">${p.bestStreak} Tag(e)</div>`;
-        card.appendChild(stat2);
+  const stat1 = document.createElement("div");
+  stat1.className = "stat-row";
+  stat1.innerHTML = `<div class="stat-label">Aktuelle Streak</div><div class="stat-value">${current} Tag(e)</div>`;
+  card.appendChild(stat1);
 
-        const stat3 = document.createElement("div");
-        stat3.className = "stat-row";
-        stat3.innerHTML = `<div class="stat-label">Letzter Rückfall</div><div class="stat-value">${lastRelapseLabel(p)}</div>`;
-        card.appendChild(stat3);
+  const stat2 = document.createElement("div");
+  stat2.className = "stat-row";
+  stat2.innerHTML = `<div class="stat-label">Bester Rekord</div><div class="stat-value">${p.bestStreak} Tag(e)</div>`;
+  card.appendChild(stat2);
 
-        const todayLine = document.createElement("div");
-        todayLine.className = "today-status";
-        todayLine.textContent = todayChecked(p) ? "Heute schon markiert ✅" : "Heute noch nicht markiert";
-        card.appendChild(todayLine);
+  const stat3 = document.createElement("div");
+  stat3.className = "stat-row";
+  stat3.innerHTML = `<div class="stat-label">Letzter Rückfall</div><div class="stat-value">${lastRelapseLabel(p)}</div>`;
+  card.appendChild(stat3);
 
-        const btnRow = document.createElement("div");
-        btnRow.className = "btn-row";
+  // === Zeitraum-Hinweis einbauen ===
+const hint = getPeriodHint(p);
+if (hint) {
+  const box = document.createElement("div");
+  box.className = "period-hint-box";
 
-        const btnClean = document.createElement("button");
-        btnClean.className = "btn btn-clean";
-        btnClean.textContent = "✅ Heute clean";
-        btnClean.addEventListener("click", () => handleCheckClean(p.id));
+  const title = document.createElement("div");
+  title.className = "period-hint-title";
+  title.textContent = hint.title;
 
-        const btnRelapse = document.createElement("button");
-        btnRelapse.className = "btn btn-relapse";
-        btnRelapse.textContent = "💥 Heute Rückfall";
-        btnRelapse.addEventListener("click", () => handleRelapse(p.id));
+  const body = document.createElement("div");
+  body.className = "period-hint-body";
+  body.textContent = hint.text;
 
-        btnRow.appendChild(btnClean);
-        btnRow.appendChild(btnRelapse);
-        card.appendChild(btnRow);
+  box.appendChild(title);
+  box.appendChild(body);
+  card.appendChild(box);
+}
 
-        // Badges
-        const badgesWrap = document.createElement("div");
-        badgesWrap.className = "badges-section";
+  // >>> this part changed <<<
+  const todayLine = document.createElement("div");
+  todayLine.className = "today-status " + (checkedToday ? "checked" : "not-checked");
+  todayLine.textContent = checkedToday
+    ? "✅ Heute markiert"
+    : "⏱️ Noch kein Check-in heute";
+  card.appendChild(todayLine);
+  // >>> end changed part <<<
 
-        const badgesTitle = document.createElement("div");
-        badgesTitle.className = "badges-title";
-        badgesTitle.textContent = "Badges (Streak & Rekord)";
-        badgesWrap.appendChild(badgesTitle);
+  const btnRow = document.createElement("div");
+  btnRow.className = "btn-row";
 
-        const badgesList = document.createElement("div");
-        badgesList.className = "badges-list";
+  const btnClean = document.createElement("button");
+  btnClean.className = "btn btn-clean";
+  btnClean.textContent = "✅ Heute clean";
+  btnClean.addEventListener("click", () => handleCheckClean(p.id));
 
-        const badges = getBadgesForPlayer(p);
-        badges.forEach(b => {
-          const pill = document.createElement("div");
-          pill.className = "badge-pill " + (b.earned ? "earned" : "locked");
-          const dotBadge = document.createElement("span");
-          dotBadge.className = "dot";
-          const txt = document.createElement("span");
-          txt.textContent = b.label;
-          pill.appendChild(dotBadge);
-          pill.appendChild(txt);
-          badgesList.appendChild(pill);
-        });
+  const btnRelapse = document.createElement("button");
+  btnRelapse.className = "btn btn-relapse";
+  btnRelapse.textContent = "💥 Heute Rückfall";
+  btnRelapse.addEventListener("click", () => handleRelapse(p.id));
 
-        badgesWrap.appendChild(badgesList);
-        card.appendChild(badgesWrap);
+  btnRow.appendChild(btnClean);
+  btnRow.appendChild(btnRelapse);
+  card.appendChild(btnRow);
 
-        // Rückfall-Notiz
-        if (p.lastRelapseDate || p.lastRelapseReason) {
-          const note = document.createElement("div");
-          note.className = "relapse-note";
-          const title = document.createElement("div");
-          title.className = "relapse-note-title";
-          title.textContent = "Notiz zum letzten Rückfall";
-          const body = document.createElement("div");
-          body.className = "relapse-note-body";
-          body.textContent = p.lastRelapseReason || "Kein Grund eingetragen.";
-          note.appendChild(title);
-          note.appendChild(body);
-          card.appendChild(note);
-        }
+  // === Flatline Hinweis ===
+if (isInFlatlineWindow(p)) {
+  const box = document.createElement("div");
+  box.className = "flatline-box";
 
-        container.appendChild(card);
-      });
+  const title = document.createElement("div");
+  title.className = "flatline-title";
+  title.innerHTML = "⚠️ Mögliche Flatline-Phase";
+
+  const body = document.createElement("div");
+  body.className = "flatline-body";
+  body.innerHTML =
+    "Wenn du dich gerade müde, emotionslos oder ohne Lust fühlst: Das ist typisch in dieser Phase. " +
+    "Dein Gehirn passt sich an weniger Dopamin-Stimulation an. " +
+    "Bleib ruhig, trainiere, schlafe gut – das geht vorbei. 💪";
+
+  box.appendChild(title);
+  box.appendChild(body);
+  card.appendChild(box);
+}
+
+  // Badges
+  const badgesWrap = document.createElement("div");
+  badgesWrap.className = "badges-section";
+
+  const badgesTitle = document.createElement("div");
+  badgesTitle.className = "badges-title";
+  badgesTitle.textContent = "Badges (Streak)";
+  badgesWrap.appendChild(badgesTitle);
+
+  const badgesList = document.createElement("div");
+  badgesList.className = "badges-list";
+
+  const badges = getBadgesForPlayer(p);
+  badges.forEach(b => {
+    const pill = document.createElement("div");
+    pill.className = "badge-pill " + (b.earned ? "earned" : "locked");
+    const dotBadge = document.createElement("span");
+    dotBadge.className = "dot";
+    const txt = document.createElement("span");
+    txt.textContent = b.label;
+    pill.appendChild(dotBadge);
+    pill.appendChild(txt);
+    badgesList.appendChild(pill);
+  });
+
+  badgesWrap.appendChild(badgesList);
+  card.appendChild(badgesWrap);
+
+  if (p.lastRelapseDate || p.lastRelapseReason) {
+    const note = document.createElement("div");
+    note.className = "relapse-note";
+    const title = document.createElement("div");
+    title.className = "relapse-note-title";
+    title.textContent = "Notiz zum letzten Rückfall";
+    const body = document.createElement("div");
+    body.className = "relapse-note-body";
+    body.textContent = p.lastRelapseReason || "Kein Grund eingetragen.";
+    note.appendChild(title);
+    note.appendChild(body);
+    card.appendChild(note);
+  }
+
+  container.appendChild(card);
+});
+
     }
 
     function renderMeta() {
