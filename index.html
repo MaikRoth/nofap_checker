@@ -1149,6 +1149,28 @@
       renderAll();
     }
 
+function handleUncheckToday(playerId) {
+  const p = state.players[playerId];
+  if (!p) return;
+  const today = todayDateStr();
+
+  // Nur etwas tun, wenn heute überhaupt markiert wurde
+  if (p.lastCheckDate !== today) return;
+
+  // Wenn heute als Rückfall eingetragen war → rückgängig machen
+  if (p.lastRelapseDate === today) {
+    p.lastRelapseDate = null;
+    p.lastRelapseReason = "";
+    // Wir gehen davon aus, dass er vor dem Fehlklick auf Streak war
+    p.isOnStreak = true;
+  }
+
+  // Heutige Markierung löschen
+  p.lastCheckDate = null;
+
+  saveState();
+  renderAll();
+}
 
     function handleResetAll() {
       if (!window.confirm("Wirklich alle Daten für euch beide zurücksetzen?")) return;
@@ -1341,6 +1363,9 @@ if (hint) {
   card.appendChild(todayLine);
   // >>> end changed part <<<
 
+
+  if (!checkedToday) {
+  // Buttons normal anzeigen, wenn heute noch nicht markiert
   const btnRow = document.createElement("div");
   btnRow.className = "btn-row";
 
@@ -1357,6 +1382,30 @@ if (hint) {
   btnRow.appendChild(btnClean);
   btnRow.appendChild(btnRelapse);
   card.appendChild(btnRow);
+} else {
+  // Info + "Markierung ändern"
+  const doneMsg = document.createElement("div");
+  doneMsg.style.marginTop = "0.5rem";
+  doneMsg.style.fontSize = "0.78rem";
+  doneMsg.style.color = "#bbf7d0";
+  doneMsg.textContent = "✔️ Für heute erledigt – morgen wieder einchecken";
+  card.appendChild(doneMsg);
+
+  const changeBtn = document.createElement("button");
+  changeBtn.textContent = "Markierung ändern";
+  changeBtn.style.marginTop = "0.3rem";
+  changeBtn.style.fontSize = "0.72rem";
+  changeBtn.style.border = "none";
+  changeBtn.style.background = "transparent";
+  changeBtn.style.color = "#93c5fd";
+  changeBtn.style.cursor = "pointer";
+  changeBtn.style.padding = "0";
+  changeBtn.style.textDecoration = "underline";
+  changeBtn.addEventListener("click", () => handleUncheckToday(p.id));
+
+  card.appendChild(changeBtn);
+}
+
 
   // === Flatline Hinweis ===
 if (isInFlatlineWindow(p)) {
