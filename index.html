@@ -560,6 +560,44 @@
     padding-top: 0.5rem;
   }
 
+  /* Karte heute clean */
+.player-card.checked-today-clean {
+  border-color: var(--accent-2);
+  box-shadow:
+    0 0 0 1px rgba(34, 197, 94, 0.8),
+    0 20px 40px rgba(22, 163, 74, 0.55);
+}
+
+/* Karte heute Rückfall */
+.player-card.checked-today-relapse {
+  border-color: var(--danger);
+  box-shadow:
+    0 0 0 1px rgba(239, 68, 68, 0.9),
+    0 20px 40px rgba(239, 68, 68, 0.45);
+}
+
+/* linker Balken */
+.today-indicator.relapse {
+  background: var(--danger);
+  box-shadow: 0 0 16px rgba(239, 68, 68, 0.9);
+}
+
+/* Status-Pill clean */
+.today-status.checked-clean {
+  background: rgba(22, 163, 74, 0.18);
+  color: #bbf7d0;
+  border-color: rgba(34, 197, 94, 0.9);
+  box-shadow: 0 0 12px rgba(34, 197, 94, 0.5);
+}
+
+/* Status-Pill relapse */
+.today-status.checked-relapse {
+  background: rgba(239, 68, 68, 0.2);
+  color: #fecaca;
+  border-color: rgba(239, 68, 68, 0.9);
+  box-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
+}
+
   .badges-title {
     font-size: 0.72rem;
     color: var(--text-soft);
@@ -1288,13 +1326,29 @@ function handleUncheckToday(playerId) {
       players.forEach(p => {
   const current = currentStreakDays(p);
   const checkedToday = todayChecked(p);
+  const relapseToday = p.lastRelapseDate === todayDateStr();
 
   const card = document.createElement("div");
-  card.className = "player-card " + (checkedToday ? "checked-today" : "not-checked-today");
+
+if (relapseToday) {
+  card.className = "player-card checked-today-relapse";
+} else if (checkedToday) {
+  card.className = "player-card checked-today-clean";
+} else {
+  card.className = "player-card not-checked-today";
+}
+
 
   // vertical indicator bar
   const indicator = document.createElement("div");
-  indicator.className = "today-indicator" + (checkedToday ? " checked" : "");
+if (relapseToday) {
+  indicator.className = "today-indicator relapse";
+} else if (checkedToday) {
+  indicator.className = "today-indicator checked";
+} else {
+  indicator.className = "today-indicator";
+}
+  
   card.appendChild(indicator);
 
   const header = document.createElement("div");
@@ -1356,10 +1410,17 @@ if (hint) {
 
   // >>> this part changed <<<
   const todayLine = document.createElement("div");
-  todayLine.className = "today-status " + (checkedToday ? "checked" : "not-checked");
-  todayLine.textContent = checkedToday
-    ? "✅ Heute markiert"
-    : "⏱️ Noch kein Check-in heute";
+  if (relapseToday) {
+  todayLine.className = "today-status checked-relapse";
+  todayLine.textContent = "💥 Heute Rückfall markiert";
+} else if (checkedToday) {
+  todayLine.className = "today-status checked-clean";
+  todayLine.textContent = "✅ Heute clean markiert";
+} else {
+  todayLine.className = "today-status not-checked";
+  todayLine.textContent = "⏱️ Noch kein Check-in heute";
+}
+
   card.appendChild(todayLine);
   // >>> end changed part <<<
 
